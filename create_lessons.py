@@ -151,10 +151,16 @@ def create_lessons(modulename,classroomname,facilityname=None):
 			# create the title for the lesson using the  title of the topic + the channel name
 			lesson_title = str(ContentNode.objects.get(id = topic_id).title)+' - '+channel_name
 
+			# lesson titles have a constraint of 50 characters
+			# if this is exceeded, remove the difference from the topic title
+			if len(lesson_title) > 50:
+				diff_len = len(lesson_title) - 50
+				lesson_title = str(ContentNode.objects.get(id = topic_id).title[:-diff_len])+' - '+channel_name
+
 			# instantiate a new lesson object for the topic
 			# title, collection and created by are needed to instantiate a lesson object. Other attributes can be set later
 			# set the title of the lesson as the title of the topic + the channel name
-			lesson_for_topic = Lesson.objects.create(id = uuid.uuid1(node=None, clock_seq=seed), title = lesson_title, collection = class_for_lessons, created_by = admin_for_lessons)
+			lesson_for_topic = Lesson.objects.create(id = uuid.uuid1(node=None, clock_seq=seed), title = lesson_title, collection = class_for_lessons, created_by = admin_for_lessons, _morango_source_id = uuid.uuid4())
 
 			# get the child nodes of the topic
 			child_nodes = ContentNode.objects.filter(parent_id = topic_id)
@@ -168,14 +174,11 @@ def create_lessons(modulename,classroomname,facilityname=None):
 			# }
 			lesson_for_topic.resources = [{'contentnode_id': node.id ,'content_id': node.content_id,'channel_id': node.channel_id} for node in child_nodes]
 
+			# set the morango partition the lesson
+			lesson_for_topic._morango_partition	= lesson_for_topic.calculate_partition() 		
+
 			# save the object
 			lesson_for_topic.save()
 
 			# inform the user that the lesson has been created
 			print('Created Lesson {} with {} resources'.format(lesson_title,len(lesson_for_topic.resources)))
-
-
-	
-
-	
-
