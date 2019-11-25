@@ -27,30 +27,58 @@ from django.contrib.auth.hashers import *
 import uuid
 
 
-# helper function to create a classroom object in the a facility if it does not exist
-# creates the object in the default facility if no facility passed in
-# returns a reference to the object created
-def get_or_create_classroom(classroomname, facilityname=None):
+# helper function to delete all the lessons created for a class
+def delete_all_lessons_for_class(classroomname,facilityname=None):
+	facility_for_class = get_facility_or_default(facilityname)
+
+	class_exists = Classroom.objects.filter(name = classroomname, parent = facility_for_class.id).exists()
+	if class_exists:
+		# if the class exists, delete all the lessons that were created for that class
+		class_obj = Classroom.objects.get(name = classroomname, parent = facility_for_class)
+
+		# print out a count of the number of lessons found
+		print('{} Lessons found in class {}'.format(Lesson.objects.filter(collection = class_obj).count(),classroomname))
+
+		# delete all the lessons found for that class
+		Lesson.objects.filter(collection = class_obj).delete()
+		print('Lessons successfully deleted')
+	else:
+		raise ValueError('There is no Class called {} in Facility {}. No Lessons were deleted'.format(classroomname,facility_for_class))
+		sys.exit()
+
+# Helper function to check if a facility exists or get the default facility
+def get_facility_or_default(facilityname=None):
 	# check if facilityname argument was passed in
 	if facilityname:
 		#if it was passed in
 		# check if the facility requested exists
 		facility_exists = Facility.objects.filter(name = facilityname).exists()
-		# if the facility exists, store a reference to the object in the facility_for_class variable
+		# if the facility exists, store a reference to the object in the chosen_facility variable
 		if facility_exists:
-			facility_for_class = Facility.objects.get(name = facilityname)
-			# inform the user which facility will be used to create the class
-			print('Using Facility: {}'.format(str(facility_for_class.name)))
+			chosen_facility = Facility.objects.get(name = facilityname)
+			# inform the user which facility has been chosen
+			print('Using Facility: {}'.format(str(chosen_facility.name)))
 		else:
 			 # if the facility does not exist, raise a value error and terminate the script
-			raise ValueError('There is no Facility called {}. Please create the Facility before creating Classes in it'.format(facilityname))
+			raise ValueError('There is no Facility called {}'.format(facilityname))
 			sys.exit()
 	else:
-	# if the facilityname argument was not passed in, use the default facility as the place to create the class
-		facility_for_class = Facility.get_default_facility()
-		# inform the user that the default facility will be used when creating the classs
-		print('Using Default Facility: {}'.format(str(facility_for_class.name)))
+		# if the facilityname argument was not passed in, choose the default facility
+		chosen_facility = Facility.get_default_facility()
+		# inform the user which facility has been chosen
+		print('Using Default Facility: {}'.format(str(chosen_facility.name)))
 
+	# return chosen facility
+	return chosen_facility
+
+
+# helper function to create a classroom object in the a facility if it does not exist
+# creates the object in the default facility if no facility passed in
+# returns a reference to the object created
+def get_or_create_classroom(classroomname, facilityname=None):
+
+	# get the facility passed in or the default facility
+	facility_for_class = get_facility_or_default(facilityname)
 
 	# filter the collections objects to check if a class with the name passed in already exists
 	# get a boolean of whether found or not
@@ -66,7 +94,8 @@ def get_or_create_classroom(classroomname, facilityname=None):
 	# return the ClassRoom object that was fetched or created
 	return class_obj
 
-
+# creates 1 lesson for each topic in each channel having the module passed in (module specified in channel_module table)
+# e.g create_lessons('numeracy','a1') will create 1 lesson for each topic in each numeracy channel
 def create_lessons(modulename,classroomname,facilityname=None):
 	
 	# get or create the class to create the lessons for
