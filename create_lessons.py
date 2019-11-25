@@ -98,9 +98,7 @@ def create_lessons(modulename,classroomname,facilityname=None):
 		raise ValueError('There are no channels with a Module called {}. Cannot create lessons without channels '.format(modulename))
 		sys.exit()
 
-	# need a title, collection and created by to instantiate a lesson. resouces, is_active can be added later
-	# new_lesson = Lesson.objects.create(title = 'orm lesson 2', collection = class_for_lessons, created_by = admin_for_lessons)
-
+	# loop through the channels with the module passed in	
 	for channel_id in channel_ids:
 		# get the channel name for use in the inner loop
 		channel_name = str(ChannelMetadata.objects.get(id = channel_id).name)
@@ -119,7 +117,8 @@ def create_lessons(modulename,classroomname,facilityname=None):
 			lesson_title = str(ContentNode.objects.get(id = topic_id).title)+' - '+channel_name
 
 			# instantiate a new lesson object for the topic
-			# assign the title as the title of the topic + the channel name
+			# title, collection and created by are needed to instantiate a lesson object. Other attributes can be set later
+			# set the title of the lesson as the title of the topic + the channel name
 			lesson_for_topic = Lesson.objects.create(title = lesson_title, collection = class_for_lessons, created_by = admin_for_lessons)
 
 			# get the child nodes of the topic
