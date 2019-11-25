@@ -102,24 +102,43 @@ def create_lessons(modulename,classroomname,facilityname=None):
 	# new_lesson = Lesson.objects.create(title = 'orm lesson 2', collection = class_for_lessons, created_by = admin_for_lessons)
 
 	for channel_id in channel_ids:
+		# get the channel name for use in the inner loop
+		channel_name = str(ChannelMetadata.objects.get(id = channel_id).name)
+
 		# channels are found in topics but have no parent_id and id == parent_id
 		# get all topics by getting all contentnodes of type topic which fulfil criteria above
-		topics = ContentNode.objects.filter(kind = 'topic', parent_id = channel_id).exclude(parent__id_isnull = TRUE).order_by('sort_order')
+		topics = ContentNode.objects.filter(kind = 'topic', parent_id = channel_id).exclude(parent_id__isnull = True).order_by('sort_order')
 
-		
+
 		# get contentnode_ids of all the topics as an array
-		topics_ids = [topic.id for topic in topics]  
+		topic_ids = [topic.id for topic in topics]  
 
 		# begin looping through topics
 		for topic_id in topic_ids:
-			nodes_in_topic = ContentNode.objects.filter(parent_id = topic_id)
+			# create the title for the lesson using the  title of the topic + the channel name
+			lesson_title = str(ContentNode.objects.get(id = topic_id).title)+' - '+channel_name
 
+			# instantiate a new lesson object for the topic
+			# assign the title as the title of the topic + the channel name
+			lesson_for_topic = Lesson.objects.create(title = lesson_title, collection = class_for_lessons, created_by = admin_for_lessons)
+
+			# get the child nodes of the topic
+			child_nodes = ContentNode.objects.filter(parent_id = topic_id)
+
+			# create an array of the resources for the lesson
 			# structure of content resource in a lesson
 			# {
 			#   contentnode_id: string,
 			#   content_id: string,
 			#   channel_id: string
 			# }
+			lesson_for_topic.resources = [{'contentnode_id': node.id ,'content_id': node.content_id,'channel_id': node.channel_id} for node in child_nodes]
+
+			# save the object
+			lesson_for_topic.save()
+
+			# inform the user that the lesson has been created
+			print('Created Lesson {} with {} resources'.format(lesson_title,len(lesson_for_topic.resources)))
 
 
 
