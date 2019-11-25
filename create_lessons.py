@@ -43,7 +43,7 @@ def get_or_create_classroom(classroomname, facilityname=None):
 			print('Using Facility: {}'.format(str(facility_for_class.name)))
 		else:
 			 # if the facility does not exist, raise a value error and terminate the script
-			raise ValueError('There is no Facility called {}. Please the Facility before creating Classes in it'.format(facilityname))
+			raise ValueError('There is no Facility called {}. Please create the Facility before creating Classes in it'.format(facilityname))
 			sys.exit()
 	else:
 	# if the facilityname argument was not passed in, use the default facility as the place to create the class
@@ -138,6 +138,7 @@ def create_lessons(modulename,classroomname,facilityname=None):
 
 			# inform the user that the lesson has been created
 			print('Created Lesson {} with {} resources'.format(lesson_title,len(lesson_for_topic.resources)))
+
 
 
 
