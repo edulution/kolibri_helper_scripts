@@ -6,6 +6,7 @@ django.setup()
 # import other libraries required
 import os
 import sys
+import random
 
 import datetime
 from django.utils import timezone
@@ -45,6 +46,7 @@ def delete_all_lessons_for_class(classroomname,facilityname=None):
 	else:
 		raise ValueError('There is no Class called {} in Facility {}. No Lessons were deleted'.format(classroomname,facility_for_class))
 		sys.exit()
+
 
 # Helper function to check if a facility exists or get the default facility
 def get_facility_or_default(facilityname=None):
@@ -94,9 +96,13 @@ def get_or_create_classroom(classroomname, facilityname=None):
 	# return the ClassRoom object that was fetched or created
 	return class_obj
 
+
 # creates 1 lesson for each topic in each channel having the module passed in (module specified in channel_module table)
 # e.g create_lessons('numeracy','a1') will create 1 lesson for each topic in each numeracy channel
 def create_lessons(modulename,classroomname,facilityname=None):
+	
+	# set the seed that will be used to generate the sequence of lesson_ids
+	seed = random.randint(1,100)
 	
 	# get or create the class to create the lessons for
 	# store a reference to the classroom object if it is created
@@ -148,7 +154,7 @@ def create_lessons(modulename,classroomname,facilityname=None):
 			# instantiate a new lesson object for the topic
 			# title, collection and created by are needed to instantiate a lesson object. Other attributes can be set later
 			# set the title of the lesson as the title of the topic + the channel name
-			lesson_for_topic = Lesson.objects.create(title = lesson_title, collection = class_for_lessons, created_by = admin_for_lessons)
+			lesson_for_topic = Lesson.objects.create(id = uuid.uuid1(node=None, clock_seq=seed), title = lesson_title, collection = class_for_lessons, created_by = admin_for_lessons)
 
 			# get the child nodes of the topic
 			child_nodes = ContentNode.objects.filter(parent_id = topic_id)
@@ -167,9 +173,6 @@ def create_lessons(modulename,classroomname,facilityname=None):
 
 			# inform the user that the lesson has been created
 			print('Created Lesson {} with {} resources'.format(lesson_title,len(lesson_for_topic.resources)))
-
-
-
 
 
 	
