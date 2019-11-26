@@ -108,3 +108,5 @@ def get_or_create_learnergroup(groupname,classroomname, facilityname=None):
 	learnergroup_obj = LearnerGroup.objects.create(name = groupname, parent = class_for_group)
 	print('Group {} successfully created in Class {}', learnergroup_obj.name, class_for_group.name)
 
+	return learnergroup_obj
+
