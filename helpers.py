@@ -43,6 +43,26 @@ def delete_all_lessons_for_class(classroomname,facilityname=None):
 		sys.exit()
 
 
+# helper function to delete all the quizzes created for a class
+def delete_all_quizzes_for_class(classroomname,facilityname=None):
+	facility_for_class = get_facility_or_default(facilityname)
+
+	class_exists = Classroom.objects.filter(name = classroomname, parent = facility_for_class.id).exists()
+	if class_exists:
+		# if the class exists, delete all the quizzes that were created for that class
+		class_obj = Classroom.objects.get(name = classroomname, parent = facility_for_class)
+
+		# print out a count of the number of quizzes found
+		print('{} Quizzes found in class {}'.format(Exam.objects.filter(collection = class_obj).count(),classroomname))
+
+		# delete all the quizzes found for that class
+		Exam.objects.filter(collection = class_obj).delete()
+		print('Lessons successfully deleted')
+	else:
+		raise ValueError('There is no Class called {} in Facility {}. No Quizzes were deleted'.format(classroomname,facility_for_class))
+		sys.exit()
+
+
 # Helper function to check if a facility exists or get the default facility
 def get_facility_or_default(facilityname=None):
 	# check if facilityname argument was passed in
@@ -88,7 +108,7 @@ def get_or_create_classroom(classroomname, facilityname=None):
 		print('Creating Class {} in Facility {}'.format(classroomname, facility_for_class.name))
 		class_obj = Classroom.objects.create(name = classroomname,parent = facility_for_class)
 
-	# return the ClassRoom object that was fetched or created
+	# return a reference to the ClassRoom object that was fetched or created
 	return class_obj
 
 
@@ -104,14 +124,18 @@ def get_or_create_learnergroup(groupname,classroomname, facilityname=None):
 	# get the classroom passed in or create it
 	class_for_group = get_or_create_classroom(classroomname,facilityname)
 
+	# check if the learnergroup passed in already exists
 	learnergroup_exists = LearnerGroup.objects.filter(name = groupname, parent = class_for_group).exists()
+
+	# if the learnergroup already exists, store a reference to it in the learnergroup_obj variable
 	if learnergroup_exists:
-		# if the class already exists return a reference of the object
+		# Inform the user that the group already exists
 		print('Group {} already exists in Class {}'.format(groupname, str(class_for_group.name)))
 		learnergroup_obj = LearnerGroup.objects.get(name = groupname, parent = class_for_group)
 	else:
+		# if the group does not exist, create it in the class and inform the user that it has been created
 		print('Creating Group {} in Class {}'.format(groupname, str(class_for_group.name)))
 		learnergroup_obj = LearnerGroup.objects.create(name = groupname, parent = class_for_group)
 
+	# return a reference to the LearnerGroup object that was created or fetched
 	return learnergroup_obj
-
