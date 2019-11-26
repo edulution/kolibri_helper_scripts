@@ -104,9 +104,14 @@ def get_or_create_learnergroup(groupname,classroomname, facilityname=None):
 	# get the classroom passed in or create it
 	class_for_group = get_or_create_classroom(classroomname,facilityname)
 
-	# create the learnergroup object
-	learnergroup_obj = LearnerGroup.objects.create(name = groupname, parent = class_for_group)
-	print('Group {} successfully created in Class {}', learnergroup_obj.name, class_for_group.name)
+	learnergroup_exists = LearnerGroup.objects.filter(name = groupname, parent = class_for_group).exists()
+	if learnergroup_exists:
+		# if the class already exists return a reference of the object
+		print('Group {} already exists in Class {}'.format(groupname, str(class_for_group.name)))
+		learnergroup_obj = LearnerGroup.objects.get(name = groupname, parent = class_for_group)
+	else:
+		print('Creating Group {} in Class {}'.format(groupname, str(class_for_group.name)))
+		learnergroup_obj = LearnerGroup.objects.create(name = groupname, parent = class_for_group)
 
 	return learnergroup_obj
 
