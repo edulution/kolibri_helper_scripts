@@ -86,8 +86,20 @@ def create_lessons(modulename,classroomname,facilityname=None):
 			# set the morango partition the lesson
 			lesson_for_topic._morango_partition	= lesson_for_topic.calculate_partition() 		
 
-			# save the object
-			lesson_for_topic.save()
-
 			# inform the user that the lesson has been created
 			print('Created Lesson {} with {} resources'.format(lesson_title,len(lesson_for_topic.resources)))
+
+			# get or create a group with the same name as the channel and assign the lesson to it
+			group_for_lesson = get_or_create_learnergroup(channel_name,classroomname,facilityname)
+
+			# create a new lesson assignment object
+			LessonAssignment.objects.create(lesson = lesson_for_topic, collection = group_for_lesson, assigned_by = admin_for_lessons)
+			print('Lesson {} successfully assigned to Group {}'.format(lesson_title, str(group_for_lesson.name)))
+
+			# activate the lesson
+			lesson_for_topic.is_active = True
+
+			# save the lesson object
+			lesson_for_topic.save()
+
+
