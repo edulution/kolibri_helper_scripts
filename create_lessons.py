@@ -49,7 +49,9 @@ def create_lessons(modulename,classroomname,facilityname=None):
 
 		# channels are found in topics but have no parent_id and id == parent_id
 		# get all topics by getting all contentnodes of type topic which fulfil criteria above
-		topics = ContentNode.objects.filter(kind = 'topic', parent_id = channel_id).exclude(parent_id__isnull = True).order_by('sort_order')
+		topics = ContentNode.objects.filter(
+			kind = 'topic', parent_id = channel_id
+			).exclude(parent_id__isnull = True).order_by('sort_order')
 
 
 		# get contentnode_ids of all the topics as an array
@@ -69,10 +71,18 @@ def create_lessons(modulename,classroomname,facilityname=None):
 			# instantiate a new lesson object for the topic
 			# title, collection and created by are needed to instantiate a lesson object. Other attributes can be set later
 			# set the title of the lesson as the title of the topic + the channel name
-			lesson_for_topic = Lesson.objects.create(id = uuid.uuid1(node=None, clock_seq=seed), title = lesson_title, collection = class_for_lessons, created_by = admin_for_lessons, _morango_source_id = uuid.uuid4())
+			lesson_for_topic = Lesson.objects.create(
+				id = uuid.uuid1(node=None, clock_seq=seed), 
+				title = lesson_title, 
+				collection = class_for_lessons, 
+				created_by = admin_for_lessons,
+				 _morango_source_id = uuid.uuid4()
+				 )
 
 			# get the child nodes of the topic
-			child_nodes = ContentNode.objects.filter(parent_id = topic_id)
+			child_nodes = ContentNode.objects.filter(
+				parent_id = topic_id
+				)
 
 			# create an array of the resources for the lesson
 			# structure of content resource in a lesson
@@ -93,7 +103,12 @@ def create_lessons(modulename,classroomname,facilityname=None):
 			group_for_lesson = get_or_create_learnergroup(channel_name,classroomname,facilityname)
 
 			# create a new lesson assignment object
-			LessonAssignment.objects.create(lesson = lesson_for_topic, collection = group_for_lesson, assigned_by = admin_for_lessons)
+			LessonAssignment.objects.create(
+				lesson = lesson_for_topic, 
+				collection = group_for_lesson, 
+				assigned_by = admin_for_lessons
+				)
+
 			print('Lesson {} successfully assigned to Group {}'.format(lesson_title, str(group_for_lesson.name)))
 
 			# activate the lesson
@@ -101,5 +116,3 @@ def create_lessons(modulename,classroomname,facilityname=None):
 
 			# save the lesson object
 			lesson_for_topic.save()
-
-
