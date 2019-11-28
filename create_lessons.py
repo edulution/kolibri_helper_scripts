@@ -109,6 +109,7 @@ def create_lessons(modulename,classroomname,facilityname=None):
 				assigned_by = admin_for_lessons
 				)
 
+			# inform the user that the lesson has been created
 			print('Lesson {} successfully assigned to Group {}'.format(lesson_title, str(group_for_lesson.name)))
 
 			# activate the lesson

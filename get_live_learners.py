@@ -51,12 +51,12 @@ def insert_live_learners_into_db(live_learners_arr):
 	                                  host = dbhost,
 	                                  port = dbport,
 	                                  database = dbname)
+
 	    # create connection cursor object
 	    cursor = connection.cursor()
 
 	    # clear out the live learners table
 	    cursor.execute('delete from live_learners')
-
 
 	    # insert the array of user_ids into the live_learners table
 	    for user_id in live_learners_arr:	
