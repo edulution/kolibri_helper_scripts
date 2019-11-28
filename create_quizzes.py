@@ -6,14 +6,15 @@ django.setup()
 # import all the helper functions
 from helpers import *
 
-# creates 1 lesson for each topic in each channel having the module passed in (module specified in channel_module table)
-# e.g create_lessons('numeracy','a1') will create 1 lesson for each topic in each numeracy channel
+# creates 1 quiz for each topic in each channel having the module passed in (module specified in channel_module table)
+# each quiz contains 10 questions
+# e.g create_quizzes('numeracy','a1') will create 1 quiz for each topic in each numeracy channel
 def create_quizzes(modulename,classroomname,facilityname=None):
 	
-	# set the seed that will be used to generate the sequence of lesson_ids
+	# set the seed that will be used to generate the sequence of exam_ids
 	seed = random.randint(1,100)
 	
-	# get or create the class to create the lessons for
+	# get or create the class to create the quizzes for
 	# store a reference to the classroom object if it is created
 	class_for_quizzes = get_or_create_classroom(classroomname,facilityname)
 
@@ -23,10 +24,10 @@ def create_quizzes(modulename,classroomname,facilityname=None):
 	# if there is no admin or coach account on the device
 	# raise an error and terminate the script
 	if len(list(admins))==0:
-		raise ValueError('There is no Admin or Coach account on the device. Cannot create lessons without an Admin or Coach account ')
+		raise ValueError('There is no Admin or Coach account on the device. Cannot create quizzes without an Admin or Coach account ')
 		sys.exit()
 	else:
-		# if admin accounts exist, choose the first one and use it to create and assign the lessons
+		# if admin accounts exist, choose the first one and use it to create and assign the quizzes
 		admin_for_quizzes = admins[0]
 
 
@@ -39,7 +40,7 @@ def create_quizzes(modulename,classroomname,facilityname=None):
 	# if there are no channel_ids, then there are no channels that have the module requested
 	# raise an error and terminate the script
 	if len(channel_ids)==0:
-		raise ValueError('There are no channels with a Module called {}. Cannot create lessons without channels '.format(modulename))
+		raise ValueError('There are no channels with a Module called {}. Cannot create quizzes without channels '.format(modulename))
 		sys.exit()
 
 	# loop through the channels with the module passed in	
@@ -75,22 +76,23 @@ def create_quizzes(modulename,classroomname,facilityname=None):
 
 			# initialize empty array to hold the content
 			quiz_content = []
-			# content_ids = []
-			# assessment_ids = []
 
 			for i in range(0, n_content_items):
-			    # Use this to randomly select an exercise content node to add to the quiz
+			    # Randomly select an exercise content node in the topic to add to the quiz
 			    random_node = random.choice(exercise_content)
+
 			    # grab this exercise node's assessment ids
 			    assessment_item_ids = random_node.assessmentmetadata.first().assessment_item_ids
-			    # randomly select one of the questions in the exercise and store the ids for the exam attempt logs
-			    #assessment_ids.append(random.choice(assessment_item_ids))
+
+			    # select a random assessment item from the assessment items of the exercise
+			    # create a json object with information about the exerise node and the random assessment id chosen
 			    content = {"exercise_id": random_node.id, "question_id": random.choice(assessment_item_ids), "title": random_node.title}
+
+			    # append the content json object to the quiz_content array
 			    quiz_content.append(content)
-			    # store content ids for when we generate exam attempt logs
-			    # content_ids.append(random_node.content_id)
 
 			# create a new quiz object with the content items gathered above
+			# use uuid1 with a set seed to make pseudo-random uuids
 			new_quiz = Exam.objects.create(
 				id = uuid.uuid1(node=None, clock_seq=seed),
 			    title=quiz_title,
@@ -101,11 +103,12 @@ def create_quizzes(modulename,classroomname,facilityname=None):
 			    creator=admin_for_quizzes,
 			    data_model_version=1,
 			)
+
+			# Inform the user that the new quiz has been generated in the class
 			print('Quiz {} created in class {}'.format(str(new_quiz.title),str(class_for_quizzes.name)))
 
 			# get or create a group to assign the quiz to based on the channel name
 			group_for_quiz = get_or_create_learnergroup(channel_name,classroomname,facilityname)
-
 
 			# create an ExamAssignment object to assign the quiz to a group
 			ExamAssignment.objects.create(
