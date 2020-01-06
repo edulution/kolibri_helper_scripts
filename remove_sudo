@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo perl -pi -e 's/sudo[ \t]+ALL=\(ALL:ALL\)[ \t]+ALL/sudo ALL=\(ALL:ALL\) NOPASSWD: ALL/g' /etc/sudoers
+
+sudo perl -pi -e 's/enabled=1/enabled=0/g' /etc/default/apport
