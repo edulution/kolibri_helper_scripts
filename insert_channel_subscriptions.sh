@@ -1,2 +1,2 @@
 #!/bin/bash
-PGPASSWORD=TestL0cal psql -h localhost -U baseline_testing -d baseline_testing_swap -a -f channel_subscriptions.sql
+PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -a -f channel_subscriptions.sql
