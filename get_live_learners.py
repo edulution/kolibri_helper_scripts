@@ -37,11 +37,11 @@ def get_live_learners():
 # function to insert an array of live learners into the live_learners table in the kolibri database
 def insert_live_learners_into_db(live_learners_arr):
 	# get the database credentials from environment variables
-	dbname = os.environ['KOLIBRI_DATABASE_NAME']
-	dbpassword = os.environ['KOLIBRI_DATABASE_PASSWORD']
-	dbuser = os.environ['KOLIBRI_DATABASE_USER']
-	dbhost = os.environ['KOLIBRI_DATABASE_HOST']
-	dbport = os.environ['KOLIBRI_DATABASE_PORT']
+	dbname = os.environ['BASELINE_DATABASE_NAME']
+	dbpassword = os.environ['BASELINE_DATABASE_PASSWORD']
+	dbuser = os.environ['BASELINE_DATABASE_USER']
+	dbhost = os.environ['BASELINE_DATABASE_HOST']
+	dbport = os.environ['BASELINE_DATABASE_PORT']
 
 
 	try:
