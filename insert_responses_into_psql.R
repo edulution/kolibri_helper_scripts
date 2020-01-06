@@ -1,3 +1,5 @@
+# A script to insert test responses into the current active baseline database
+# takes in a csv file with all the columns from the responses table
 options(warn=-1)
 #suppress messages when loading package
 suppressMessages(library(timeDate))
