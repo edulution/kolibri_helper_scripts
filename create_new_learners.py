@@ -6,9 +6,7 @@ django.setup()
 
 # import all the helper functions
 from helpers import *
-from django.contrib.auth.hashers import *
 import datetime
-import uuid
 import csv
 
 import argparse
