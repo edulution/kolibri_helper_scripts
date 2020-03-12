@@ -13,16 +13,20 @@ from kolibri.core.auth.models import *
 import psycopg2
 
 
-# function to get learners that were active in the last 10 minutes and return their user_ids
+# function to get learners that were active based on kolibri idle session timeout and return their user_ids
 def get_live_learners():
-	last_ten_minutes = timezone.now() - timedelta(minutes=10)
+	# get kolibri idle session timeout as an integer
+	sess_timeout = int(os.environ['KOLIBRI_SESSION_TIMEOUT'])
+	
+	# initalize cut-off time using kolibri idle session timeout to decide which learners qualify as live learners
+	live_learners_cutoff = timezone.now() - timedelta(seconds=sess_timeout)
 	try:
 		# ensure that there is a conenction to the database
 	    connection.ensure_connection()
 
 	    # live learners are learners that have been active in the last 10 minutes
 	    # get all usersessionlogs where the last interaction timestamp is greater or equal to current time minus 10 minutes
-	    live_sessions = UserSessionLog.objects.filter(last_interaction_timestamp__gte=last_ten_minutes).values('user_id').distinct()
+	    live_sessions = UserSessionLog.objects.filter(last_interaction_timestamp__gte=live_learners_cutoff).values('user_id').distinct()
 
 	    # get array of user_ids of live learners
 	    live_learners = [user.get('user_id') for user in live_sessions]
