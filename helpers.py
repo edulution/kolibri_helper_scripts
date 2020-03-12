@@ -22,46 +22,40 @@ from kolibri.core.exams.models import *
 from django.contrib.auth.hashers import *
 import uuid
 
+from django.core.exceptions import ObjectDoesNotExist
+
 
 # helper function to delete all the lessons created for a class
 def delete_all_lessons_for_class(classroomname,facilityname=None):
 	facility_for_class = get_facility_or_default(facilityname)
 
-	class_exists = Classroom.objects.filter(name = classroomname, parent = facility_for_class.id).exists()
-	if class_exists:
-		# if the class exists, delete all the lessons that were created for that class
+	try:
 		class_obj = Classroom.objects.get(name = classroomname, parent = facility_for_class)
-
-		# print out a count of the number of lessons found
-		print('{} Lessons found in class {}'.format(Lesson.objects.filter(collection = class_obj).count(),classroomname))
-
-		# delete all the lessons found for that class
-		Lesson.objects.filter(collection = class_obj).delete()
-		print('Lessons successfully deleted')
-	else:
+	except ObjectDoesNotExist:
 		raise ValueError('There is no Class called {} in Facility {}. No Lessons were deleted'.format(classroomname,facility_for_class))
 		sys.exit()
 
+	print('{} Lessons found in class {}'.format(Lesson.objects.filter(collection = class_obj).count(),classroomname))
+
+	# delete all the lessons found for that class
+	Lesson.objects.filter(collection = class_obj).delete()
+	print('Lessons successfully deleted')
 
 # helper function to delete all the quizzes created for a class
 def delete_all_quizzes_for_class(classroomname,facilityname=None):
 	facility_for_class = get_facility_or_default(facilityname)
 
-	class_exists = Classroom.objects.filter(name = classroomname, parent = facility_for_class.id).exists()
-	if class_exists:
-		# if the class exists, delete all the quizzes that were created for that class
+	try:
 		class_obj = Classroom.objects.get(name = classroomname, parent = facility_for_class)
-
-		# print out a count of the number of quizzes found
-		print('{} Quizzes found in class {}'.format(Exam.objects.filter(collection = class_obj).count(),classroomname))
-
-		# delete all the quizzes found for that class
-		Exam.objects.filter(collection = class_obj).delete()
-		print('Lessons successfully deleted')
-	else:
+	except ObjectDoesNotExist:
 		raise ValueError('There is no Class called {} in Facility {}. No Quizzes were deleted'.format(classroomname,facility_for_class))
 		sys.exit()
 
+	print('{} Quizzes found in class {}'.format(Exam.objects.filter(collection = class_obj).count(),classroomname))
+
+	# delete all the quizzes found for that class
+	Exam.objects.filter(collection = class_obj).delete()
+	print('Quizzes successfully deleted')
 
 # Helper function to check if a facility exists or get the default facility
 def get_facility_or_default(facilityname=None):
