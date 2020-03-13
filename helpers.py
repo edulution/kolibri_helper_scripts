@@ -133,3 +133,79 @@ def get_or_create_learnergroup(groupname,classroomname, facilityname=None):
 
 	# return a reference to the LearnerGroup object that was created or fetched
 	return learnergroup_obj
+
+# a function to generate a new facility object with the name passed in
+# learners are allowed to log in without a password on the new facility. all other 
+def create_facility(facility_name):
+	# check if a facility with the name passed in already exists
+	facility_exists = Facility.objects.filter(name = facilityname).exists()
+
+	# if a facility with the name passed in already exists,
+	if facility_exists:
+		# raise a value error and exit in an error state
+		raise ValueError('Error: Facility with the name {} already exists'.format(facilityname))
+		sys.exit('Facility was not created. Please check the errors above')
+	else:
+		# if a facility with the name passed in does not exist, generate a new facility object
+		new_facility = Facility.objects.create(name = facilityname)
+
+		# set the permissions on the facility
+		new_facility.learner_can_edit_username = False
+		new_facility.learner_can_edit_name = False
+		new_facility.learner_can_edit_password = False
+		new_facility.learner_can_sign_up = False
+		new_facility.learner_can_delete_account = False
+		new_facility.learner_can_login_with_no_password = True
+		new_facility.show_download_button_in_learn = False
+		new_facility.allow_guest_access = False
+
+		# save the object after modifying its properties
+		new_facility.save()
+
+	# return the new facility object
+	return new_facility
+
+
+def create_admin_for_facility(admin_name,admin_password,facility_name):
+	# check if a user or admin with the name passed in already exists
+	user_exists = FacilityUser.objects.filter(name = admin_name).exists()
+	if user_exists:
+		# if the user already exists, raise a value error and terminate the script
+		raise ValueError('There is already a user or admin called {}'.format(admin_name))
+		sys.exit()
+	else:
+		# if the user does not already exist
+		
+		# check if the facility passed in already exists
+		try:
+			# get a reference to the facility object with the name passed in
+			facility_obj = Facility.objects.get(name = facility_name)
+
+			# get the facility id and dataset id
+			facility_id = facility_obj.id
+			dataset_id = facility_obj.dataset_id
+
+		# catch the exception when the object does not exist
+		except ObjectDoesNotExist:
+			# print out the id that does not exist
+			raise ValueError('Error: Facility with the name {} does not exist'.format(facility))
+		 	
+			# exit in an error state
+		 	# if the facility does not exist, raise a value error and terminate the script
+			sys.exit('Admin was not created successfully. Check the error(s) above')
+
+		 # generate a new user_id
+		 new_user_id = uuid.uuid4()
+
+		 # use the user_id and dataset_id from the facility object to create the morango partition
+		 _morango_partition = "{dataset_id}:user-ro:{user_id}".format(dataset_id=dataset_id, user_id=new_user_id)
+
+		 # an admin account is simply a user with an admin role for a facility
+		 # create a new user object with the username, password, and facility passed in (full name can be omitted)
+		 new_admin = FacilityUser.objects.create(username=username,password=make_password(admin_password),dataset_id=dataset_id,facility_id=facility_id,_morango_partition = _morango_partition, _morango_source_id = uuid.uuid4())
+
+		 # create a new admin role for the user that has just been created
+		 Role.objects.create(user = new_admin, collection = facility_obj, kind = 'admin')
+
+	# return the newly created admin
+	return new_admin
