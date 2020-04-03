@@ -1,7 +1,7 @@
-import kolibri
+import kolibri # noqa F401
 import django
 import sys
-from django.contrib.auth.hashers import *
+from django.contrib.auth.hashers import make_password
 import uuid
 import csv
 import argparse
@@ -13,7 +13,7 @@ django.setup()
 argParser = argparse.ArgumentParser()
 
 argParser.add_argument(
-    '--file', 
+    '--file',
     '-f',
     help='CSV file to import users from. Must contain the fields id,username,full_name')
 argParser.add_argument(

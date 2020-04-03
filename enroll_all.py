@@ -2,10 +2,11 @@
 
 import kolibri
 import django
+from kolibri.core.auth.models import Collection, FacilityUser, Membership
 django.setup()
 
 # import all the helper functions
-from helpers import *
+
 
 # get a reference to the live learners class
 live_learners_class = Collection.objects.get(name='Live Learners')
@@ -14,8 +15,8 @@ live_learners_class = Collection.objects.get(name='Live Learners')
 all_users = FacilityUser.objects.all()
 
 # delete all memberships
-Membership.objects.all().delete()	
+Membership.objects.all().delete()
 
 # assign every user to the live learners class
 for learner in all_users:
-	Membership.objects.create(user = learner, collection = live_learners_class)
+    Membership.objects.create(user=learner, collection=live_learners_class)

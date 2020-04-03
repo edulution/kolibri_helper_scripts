@@ -1,7 +1,6 @@
 # import kolibri and django to ensure the script runs in kolibri shell
 import kolibri
 import django
-django.setup()
 
 # import other libraries required
 import os
@@ -9,15 +8,15 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db import connection
 from kolibri.core.logger.models import UserSessionLog
-from kolibri.core.auth.models import *
+from kolibri.core.auth.models import OperationalError
 import psycopg2
+django.setup()
 
 
 # function to get learners that were active based on kolibri idle session timeout and return their user_ids
 def get_live_learners():
     # get kolibri idle session timeout as an integer
     sess_timeout = int(os.environ['KOLIBRI_SESSION_TIMEOUT'])
-    
     # initalize cut-off time using kolibri idle session timeout to decide which learners qualify as live learners
     live_learners_cutoff = timezone.now() - timedelta(seconds=sess_timeout)
     try:
@@ -38,6 +37,7 @@ def get_live_learners():
     # return an array of user_ids of live learners
     return live_learners
 
+
 # function to insert an array of live learners into the live_learners table in the kolibri database
 def insert_live_learners_into_db(live_learners_arr):
     # get the database credentials from environment variables
@@ -47,14 +47,13 @@ def insert_live_learners_into_db(live_learners_arr):
     dbhost = os.environ['BASELINE_DATABASE_HOST']
     dbport = os.environ['BASELINE_DATABASE_PORT']
 
-
     try:
         # connect to the postgresql database
-        connection = psycopg2.connect(user = dbuser,
-                                      password = dbpassword,
-                                      host = dbhost,
-                                      port = dbport,
-                                      database = dbname)
+        connection = psycopg2.connect(user=dbuser,
+                                      password=dbpassword,
+                                      host=dbhost,
+                                      port=dbport,
+                                      database=dbname)
 
         # create connection cursor object
         cursor = connection.cursor()
@@ -63,8 +62,8 @@ def insert_live_learners_into_db(live_learners_arr):
         cursor.execute('delete from live_learners')
 
         # insert the array of user_ids into the live_learners table
-        for user_id in live_learners_arr:   
-            cursor.execute("insert into live_learners(user_id) values (%s)",(user_id,))
+        for user_id in live_learners_arr:
+            cursor.execute("insert into live_learners(user_id) values (%s)", (user_id,))
 
         # commit the changes to the database
         connection.commit()
@@ -72,8 +71,7 @@ def insert_live_learners_into_db(live_learners_arr):
         # Print the number of live learners that have been inserted into the table
         print("%s live learner(s) found" % len(live_learners_arr))
 
-        
-    except (Exception, psycopg2.Error) as error :
+    except (Exception, psycopg2.Error) as error:
         # catch any errors from the database and print them to the console
         print ("Error while connecting to the database", error)
 
@@ -82,10 +80,3 @@ def insert_live_learners_into_db(live_learners_arr):
 if __name__ == '__main__':
     live_learners = get_live_learners()
     insert_live_learners_into_db(live_learners)
-
-
-
-
-
-
-
