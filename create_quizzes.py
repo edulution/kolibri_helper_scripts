@@ -1,16 +1,21 @@
-# import kolibri and django to ensure that the script runs in kolibri shell
-import kolibri
+import kolibri # noqa F401
 import django
+import random
+import sys
+import uuid
 
 # import all the helper functions
-from helpers import *
+from helpers import get_or_create_classroom, get_or_create_learnergroup
 django.setup()
+
+from kolibri.core.auth.models import FacilityUser # noqa E402
+from kolibri.core.exams.models import Exam, ExamAssignment # noqa E402
+from kolibri.core.content.models import ContentNode, ChannelMetadata # noqa E402
+from le_utils.constants import content_kinds # noqa E402
 
 
 # creates 1 quiz for each topic in each channel having the module passed in (module specified in channel_module table)
 # each quiz contains 10 questions
-
-
 # e.g create_quizzes('numeracy','a1') will create 1 quiz for each topic in each numeracy channel
 def create_quizzes(modulename, classroomname, facilityname=None):
     # set the seed that will be used to generate the sequence of exam_ids

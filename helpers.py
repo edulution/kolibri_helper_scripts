@@ -1,24 +1,19 @@
-import os
+# import os
 import sys
-import random
 
-import datetime
-from django.utils import timezone
-from django.db import connection
+# import datetime
+# from django.utils import timezone
+# from django.db import connection
 
-# import kolibri content models
-from kolibri.core.content.models import *
-
-# import kolibri auth models
-from kolibri.core.auth.models import *
+from kolibri.core.auth.models import Facility, FacilityUser, Classroom, LearnerGroup, Role
 
 # import kolibri lessons models
-from kolibri.core.lessons.models import *
+from kolibri.core.lessons.models import Lesson
 
 # import kolibri exams models
-from kolibri.core.exams.models import *
+from kolibri.core.exams.models import Exam
 
-from django.contrib.auth.hashers import *
+from django.contrib.auth.hashers import make_password
 import uuid
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -114,7 +109,7 @@ def get_or_create_classroom(classroomname, facilityname=None):
 def get_or_create_learnergroup(groupname, classroomname, facilityname=None):
 
     # get the facility passed in or the default facility
-    facility_for_class = get_facility_or_default(facilityname)
+    # facility_for_class = get_facility_or_default(facilityname)
 
     # get the classroom passed in or create it
     class_for_group = get_or_create_classroom(classroomname, facilityname)
@@ -140,16 +135,16 @@ def get_or_create_learnergroup(groupname, classroomname, facilityname=None):
 # learners are allowed to log in without a password on the new facility. all other
 def create_facility(facility_name):
     # check if a facility with the name passed in already exists
-    facility_exists = Facility.objects.filter(name=facilityname).exists()
+    facility_exists = Facility.objects.filter(name=facility_name).exists()
 
     # if a facility with the name passed in already exists,
     if facility_exists:
         # raise a value error and exit in an error state
-        raise ValueError('Error: Facility with the name {} already exists'.format(facilityname))
+        raise ValueError('Error: Facility with the name {} already exists'.format(facility_name))
         sys.exit('Facility was not created. Please check the errors above')
     else:
         # if a facility with the name passed in does not exist, generate a new facility object
-        new_facility = Facility.objects.create(name=facilityname)
+        new_facility = Facility.objects.create(name=facility_name)
 
         # set the permissions on the facility
         new_facility.learner_can_edit_username = False
@@ -168,12 +163,12 @@ def create_facility(facility_name):
     return new_facility
 
 
-def create_admin_for_facility(admin_name, admin_password, facility_name):
+def create_admin_for_facility(admin_uname, admin_password, facility_name):
     # check if a user or admin with the name passed in already exists
-    user_exists = FacilityUser.objects.filter(name=admin_name).exists()
+    user_exists = FacilityUser.objects.filter(name=admin_uname).exists()
     if user_exists:
         # if the user already exists, raise a value error and terminate the script
-        raise ValueError('There is already a user or admin called {}'.format(admin_name))
+        raise ValueError('There is already a user or admin called {}'.format(admin_uname))
         sys.exit()
     else:
         # if the user does not already exist
@@ -189,30 +184,36 @@ def create_admin_for_facility(admin_name, admin_password, facility_name):
         # catch the exception when the object does not exist
         except ObjectDoesNotExist:
             # print out the id that does not exist
-            raise ValueError('Error: Facility with the name {} does not exist'.format(facility))
+            raise ValueError('Error: Facility with the name {} does not exist'.format(facility_name))
             # exit in an error state
             # if the facility does not exist, raise a value error and terminate the script
             sys.exit('Admin was not created successfully. Check the error(s) above')
 
         # generate a new user_id
-         new_user_id = uuid.uuid4()
+        new_user_id = uuid.uuid4()
 
-         # use the user_id and dataset_id from the facility object to create the morango partition
-         _morango_partition = "{dataset_id}:user-ro:{user_id}".format(dataset_id=dataset_id, user_id=new_user_id)
+        # use the user_id and dataset_id from the facility object to create the morango partition
+        _morango_partition = "{dataset_id}:user-ro:{user_id}".format(dataset_id=dataset_id, user_id=new_user_id)
 
-         # an admin account is simply a user with an admin role for a facility
-         # create a new user object with the username, password, and facility passed in (full name can be omitted)
-         new_admin = FacilityUser.objects.create(username=username,password=make_password(admin_password),dataset_id=dataset_id,facility_id=facility_id,_morango_partition = _morango_partition, _morango_source_id = uuid.uuid4())
+        # an admin account is simply a user with an admin role for a facility
+        # create a new user object with the username, password, and facility passed in (full name can be omitted)
+        new_admin = FacilityUser.objects.create(
+            username=admin_uname,
+            password=make_password(admin_password),
+            dataset_id=dataset_id,
+            facility_id=facility_id,
+            _morango_partition=_morango_partition,
+            _morango_source_id=uuid.uuid4())
 
-         # create a new admin role for the user that has just been created
-         Role.objects.create(user = new_admin, collection = facility_obj, kind = 'admin')
+        # create a new admin role for the user that has just been created
+        Role.objects.create(user=new_admin, collection=facility_obj, kind='admin')
 
     # return the newly created admin
     return new_admin
 
 
 # Helper function to change the password of a user specified by id
-def change_password(id,new_password):
+def change_password(id, new_password):
     # get a reference to the user
     u = FacilityUser.objects.get(id=id)
     # change the password of the user

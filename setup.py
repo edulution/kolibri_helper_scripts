@@ -1,10 +1,9 @@
 import kolibri # noqa F401
 import django
-from helpers import *
-from create_lessons import create_quizzes
-from create_quizzes import create_lessons
-
 django.setup()
+
+from create_lessons import create_quizzes # noqa E402
+from create_quizzes import create_lessons # noqa E402
 
 # Create lessons and quizzes for the live learners cleass
 # The class will be created if it does not exist
