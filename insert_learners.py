@@ -1,17 +1,19 @@
 import kolibri # noqa F401
 import django
+
 import sys
-from django.contrib.auth.hashers import make_password
 import uuid
 import csv
 import argparse
-from helpers import *
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ObjectDoesNotExist
 
 django.setup()
 
-# import all the helper functions
-argParser = argparse.ArgumentParser()
+from kolibri.core.auth.models import Facility, FacilityUser # noqa F402
 
+# Initalize argparse and define all of the arguments to this module
+argParser = argparse.ArgumentParser()
 argParser.add_argument(
     '--file',
     '-f',

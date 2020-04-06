@@ -3,13 +3,15 @@
 # A csv which contains the column id, the user_ids of the users to delete
 # Other columns may exist in the csv file but they will be ignored
 
-import kolibri
+import kolibri # noqa F401
 import django
-from kolibri.core.auth.models import FacilityUser
+
 import sys
 import csv
 import argparse
+from kolibri.core.auth.models import FacilityUser
 from django.core.exceptions import ObjectDoesNotExist
+
 django.setup()
 
 argParser = argparse.ArgumentParser()

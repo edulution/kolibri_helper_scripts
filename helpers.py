@@ -1,22 +1,10 @@
-# import os
 import sys
-
-# import datetime
-# from django.utils import timezone
-# from django.db import connection
-
-from kolibri.core.auth.models import Facility, FacilityUser, Classroom, LearnerGroup, Role
-
-# import kolibri lessons models
-from kolibri.core.lessons.models import Lesson
-
-# import kolibri exams models
-from kolibri.core.exams.models import Exam
-
-from django.contrib.auth.hashers import make_password
 import uuid
-
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.hashers import make_password
+from kolibri.core.exams.models import Exam
+from kolibri.core.lessons.models import Lesson
+from kolibri.core.auth.models import Facility, FacilityUser, Classroom, LearnerGroup, Role
 
 
 # helper function to delete all the lessons created for a class

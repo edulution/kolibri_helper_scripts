@@ -2,12 +2,13 @@
 
 import kolibri  # noqa F401
 import django
-from kolibri.core.auth.models import Classroom
+
 import sys
 import argparse
 from django.core.exceptions import ObjectDoesNotExist
 django.setup()
 
+from kolibri.core.auth.models import Classroom # noqa E402
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument('--old_name', '-o', help='Current name of the class you with to rename')

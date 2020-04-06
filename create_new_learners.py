@@ -1,22 +1,24 @@
 # Create new users from a csv file with the columns full name and username
 
-import kolibri
+import kolibri # noqa F401
 import django
 # import all the helper functions
-from helpers import *
-import datetime
+import uuid
 import csv
 import argparse
+from django.contrib.auth.hashers import make_password
 
 django.setup()
 
-argParser = argparse.ArgumentParser()
+from kolibri.core.auth.models import Facility, FacilityDataset, FacilityUser # noqa E402
 
+# Initalize argparse and define arguments that can be passed to this module
+argParser = argparse.ArgumentParser()
 argParser.add_argument('--file', '-f', help='File to create users from')
 
 dataset_id = FacilityDataset.objects.first().id
-
 def_facility = Facility.get_default_facility().id
+# TODO: Refactor to account for multiple facilities
 
 
 def create_users(input_file):

@@ -1,9 +1,11 @@
 # emergency script to enroll all users into the live learners class in case the assign memberships script does not work
 
-import kolibri
+import kolibri # noqa F401
 import django
-from kolibri.core.auth.models import Collection, FacilityUser, Membership
+
 django.setup()
+
+from kolibri.core.auth.models import Collection, FacilityUser, Membership # noqa E402
 
 # import all the helper functions
 

@@ -1,10 +1,9 @@
 import kolibri # noqa F401
 import django
-import random
+
 import sys
 import uuid
-
-# import all the helper functions
+import random
 from helpers import get_or_create_classroom, get_or_create_learnergroup
 django.setup()
 

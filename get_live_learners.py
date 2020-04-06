@@ -1,15 +1,16 @@
 # import kolibri and django to ensure the script runs in kolibri shell
-import kolibri
+import kolibri # noqa F401
 import django
 
 # import other libraries required
 import os
-from django.utils import timezone
 from datetime import timedelta
 from django.db import connection
+from django.utils import timezone
 from kolibri.core.logger.models import UserSessionLog
 from kolibri.core.auth.models import OperationalError
 import psycopg2
+
 django.setup()
 
 
