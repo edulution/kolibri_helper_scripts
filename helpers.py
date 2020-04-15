@@ -153,7 +153,7 @@ def create_facility(facility_name):
 
 def create_admin_for_facility(admin_uname, admin_password, facility_name):
     # check if a user or admin with the name passed in already exists
-    user_exists = FacilityUser.objects.filter(name=admin_uname).exists()
+    user_exists = FacilityUser.objects.filter(username=admin_uname).exists()
     if user_exists:
         # if the user already exists, raise a value error and terminate the script
         raise ValueError('There is already a user or admin called {}'.format(admin_uname))
@@ -197,6 +197,7 @@ def create_admin_for_facility(admin_uname, admin_password, facility_name):
         Role.objects.create(user=new_admin, collection=facility_obj, kind='admin')
 
     # return the newly created admin
+    print('Admin : {} was created successfully'.format(new_admin.username))
     return new_admin
 
 
