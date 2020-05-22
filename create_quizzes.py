@@ -61,11 +61,11 @@ def create_quizzes(modulename, classroomname, facilityname=None):
 
         # begin looping through topics
         for topic_id in topic_ids:
-            # create the title for the lesson using the  title of the topic + the channel name
+            # create the title for the Quiz using the  title of the topic + the channel name
             quiz_title = str(ContentNode.objects.get(id=topic_id).title)+' - '+channel_name
 
-            # lesson titles have a constraint of 50 characters
-            # if this is exceeded, remove the difference from the topic title
+            # Quiz titles have a constraint of 50 characters
+            # if this is exceeded, remove the difference from the Quiz title
             if len(quiz_title) > 50:
                 diff_len = len(quiz_title) - 50
                 quiz_title = str(ContentNode.objects.get(id=topic_id).title[:-diff_len])+' - '+channel_name
@@ -74,8 +74,10 @@ def create_quizzes(modulename, classroomname, facilityname=None):
             # assumes that the next level beneath a topic is an exercise/video
             exercise_content = ContentNode.objects.filter(parent_id=topic_id, kind=content_kinds.EXERCISE)
 
-            # only add 10 exercises in a quiz:
-            n_content_items = 10
+            # TODO:
+            # get 38% of the total number of exercises in the topic. Add this number of exercises to a quiz:
+            # n_content_items = int(round(0.9 * exercise_content.count()))
+            n_content_items = exercise_content.count()
 
             # initialize empty array to hold the content
             quiz_content = []
@@ -108,7 +110,8 @@ def create_quizzes(modulename, classroomname, facilityname=None):
             )
 
             # Inform the user that the new quiz has been generated in the class
-            print('Quiz {} created in class {}'.format(str(new_quiz.title), str(class_for_quizzes.name)))
+            # Print('Quiz {} created in class {}'.format(str(new_quiz.title), str(class_for_quizzes.name)))
+            print('Quiz {} created in class {} with {} content items'.format(str(new_quiz.title), str(class_for_quizzes.name), str(n_content_items)))
 
             # get or create a group to assign the quiz to based on the channel name
             group_for_quiz = get_or_create_learnergroup(channel_name, classroomname, facilityname)
