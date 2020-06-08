@@ -7,8 +7,18 @@ from kolibri.core.lessons.models import Lesson
 from kolibri.core.auth.models import Facility, FacilityUser, Classroom, LearnerGroup, Role
 
 
-# helper function to delete all the lessons created for a class
 def delete_all_lessons_for_class(classroomname, facilityname=None):
+    """Function to delete all lessons that have been assigned to a classroom.
+        The actutal Lesson objects are deleted, not just the assignment
+
+        Args:
+            classroomname (string): name of the classroom
+            facilityname (string): name of the facility (default facility if not specified)
+
+        Returns:
+            None
+    """
+
     facility_for_class = get_facility_or_default(facilityname)
 
     try:
@@ -24,8 +34,17 @@ def delete_all_lessons_for_class(classroomname, facilityname=None):
     print('Lessons successfully deleted')
 
 
-# helper function to delete all the quizzes created for a class
 def delete_all_quizzes_for_class(classroomname, facilityname=None):
+    """Function to delete all the quizzes created for a class
+
+    Args:
+        classroomname (string): name of the classroom
+        facilityname (string): name of the facility (default facility if not specified)
+
+    Returns:
+        None
+    """
+
     facility_for_class = get_facility_or_default(facilityname)
 
     try:
@@ -41,8 +60,17 @@ def delete_all_quizzes_for_class(classroomname, facilityname=None):
     print('Quizzes successfully deleted')
 
 
-# Helper function to check if a facility exists or get the default facility
 def get_facility_or_default(facilityname=None):
+    """Function to check if a facility exists or get the default facility
+
+    Args:
+        facilityname (string): name of the facility (default facility if not specified)
+
+    Returns:
+        Facility: a reference to the Facility created
+
+    """
+
     # check if facilityname argument was passed in
     if facilityname:
         # if it was passed in
@@ -67,10 +95,17 @@ def get_facility_or_default(facilityname=None):
     return chosen_facility
 
 
-# helper function to create a classroom object in the a facility if it does not exist
-# creates the object in the default facility if no facility passed in
-# returns a reference to the object created
 def get_or_create_classroom(classroomname, facilityname=None):
+    """Function to get a reference to a specified Classroom object in a specified Facility
+    Creates the Classroom object in the a specified Facility if it does not exist
+
+    Args:
+        classroomname (string): name of the classroom
+        facilityname (string): name of the facility (default facility if not specified)
+
+    Returns:
+        Classroom: a reference to Classroom created
+    """
 
     # get the facility passed in or the default facility
     facility_for_class = get_facility_or_default(facilityname)
@@ -90,11 +125,18 @@ def get_or_create_classroom(classroomname, facilityname=None):
     return class_obj
 
 
-# helper function to create a learnergroup object in a classroom in a facility if it does not exist
-# creates a classroom object with the name passed in if it does not exist
-# creates the classroom object in the default facility if no facility passed in
-# returns a reference to the learnergroup object created
 def get_or_create_learnergroup(groupname, classroomname, facilityname=None):
+    """Function to create a Learnergroup in a specified Classroom belonging to a specified Facility
+    Creates both the Learergroup and Classroom objects if they do not exist
+
+    Args:
+        groupname (string):
+        classroomname (string):
+        facilityname (string):
+
+    Returns:
+        Learnergroup : A reference to the Learnergroup object created
+    """
 
     # get the facility passed in or the default facility
     # facility_for_class = get_facility_or_default(facilityname)
@@ -119,20 +161,35 @@ def get_or_create_learnergroup(groupname, classroomname, facilityname=None):
     return learnergroup_obj
 
 
-# a function to generate a new facility object with the name passed in
-# learners are allowed to log in without a password on the new facility. all other
-def create_facility(facility_name):
+def create_facility(facilityname):
+    """Function to create a new Facility object
+
+    Args:
+        facilityname (string): name of the facility to create
+
+    Returns:
+        Facility: a reference to the Facility created
+
+    Settings on the created Facility:
+        - Annonymous users cannot access content
+        - Learners cannot sign up
+        - Learners cannot delete their accounts
+        - Learners cannot edit username, and name
+        - Learners are allowed to log in without a password
+        - Download button is not displayed on content
+    """
+
     # check if a facility with the name passed in already exists
-    facility_exists = Facility.objects.filter(name=facility_name).exists()
+    facility_exists = Facility.objects.filter(name=facilityname).exists()
 
     # if a facility with the name passed in already exists,
     if facility_exists:
         # raise a value error and exit in an error state
-        raise ValueError('Error: Facility with the name {} already exists'.format(facility_name))
+        raise ValueError('Error: Facility with the name {} already exists'.format(facilityname))
         sys.exit('Facility was not created. Please check the errors above')
     else:
         # if a facility with the name passed in does not exist, generate a new facility object
-        new_facility = Facility.objects.create(name=facility_name)
+        new_facility = Facility.objects.create(name=facilityname)
 
         # set the permissions on the facility
         new_facility.learner_can_edit_username = False
@@ -151,7 +208,20 @@ def create_facility(facility_name):
     return new_facility
 
 
-def create_admin_for_facility(admin_uname, admin_password, facility_name):
+def create_admin_for_facility(admin_uname, admin_password, facilityname):
+    """Function to create an admin account in a specified Facility.
+    An admin is simply a FacilityUser with admin privileges
+
+    Args:
+        admin_uname (string): Username of the admin account to create
+        admin_password (string): Password of the admin account to create
+        facilityname (string): Name of the facility in which to create the admin account
+
+    Returns:
+        FacilityUser: a reference to the admin account created
+
+    """
+
     # check if a user or admin with the name passed in already exists
     user_exists = FacilityUser.objects.filter(username=admin_uname).exists()
     if user_exists:
@@ -163,7 +233,7 @@ def create_admin_for_facility(admin_uname, admin_password, facility_name):
         # check if the facility passed in already exists
         try:
             # get a reference to the facility object with the name passed in
-            facility_obj = Facility.objects.get(name=facility_name)
+            facility_obj = Facility.objects.get(name=facilityname)
 
             # get the facility id and dataset id
             facility_id = facility_obj.id
@@ -172,7 +242,7 @@ def create_admin_for_facility(admin_uname, admin_password, facility_name):
         # catch the exception when the object does not exist
         except ObjectDoesNotExist:
             # print out the id that does not exist
-            raise ValueError('Error: Facility with the name {} does not exist'.format(facility_name))
+            raise ValueError('Error: Facility with the name {} does not exist'.format(facilityname))
             # exit in an error state
             # if the facility does not exist, raise a value error and terminate the script
             sys.exit('Admin was not created successfully. Check the error(s) above')
@@ -201,8 +271,17 @@ def create_admin_for_facility(admin_uname, admin_password, facility_name):
     return new_admin
 
 
-# Helper function to change the password of a user specified by id
 def change_password(id, new_password):
+    """Helper function to change the password of a FacilityUser specified by id
+
+    Args:
+        id (string): The id of the FacilityUser to change the password for
+        new_password (string): The new password of the FacilityUser
+
+    Returns:
+        None
+    """
+
     # get a reference to the user
     u = FacilityUser.objects.get(id=id)
     # change the password of the user

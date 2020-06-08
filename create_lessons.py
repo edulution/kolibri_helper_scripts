@@ -13,9 +13,19 @@ from kolibri.core.lessons.models import Lesson, LessonAssignment # noqa E402
 from kolibri.core.content.models import ContentNode, ChannelMetadata # noqa E402
 
 
-# creates 1 lesson for each topic in each channel having the module passed in (module specified in channel_module table)
-# e.g create_lessons('numeracy','a1') will create 1 lesson for each topic in each numeracy channel
 def create_lessons(modulename, classroomname, facilityname=None):
+    """ Function to create 1  Lesson for each topic in each Channel for a specified Module, then assign them to a Classroom.
+    The Classroom object is created if it does not exist.
+
+    Args:
+        modulename (string): name of the module
+        classroomname (string): name of the class
+        facilityname (string): name of the facility (default facility if not specified)
+
+    Returns:
+        None
+    """
+
     # set the seed that will be used to generate the sequence of lesson_ids
     seed = random.randint(1, 100)
     # get or create the class to create the lessons for
@@ -23,6 +33,7 @@ def create_lessons(modulename, classroomname, facilityname=None):
     class_for_lessons = get_or_create_classroom(classroomname, facilityname)
 
     # get a list of the admin and coach accounts on the device
+    # use raw query because __in ORM method doesn't work with uuid data type
     admins = FacilityUser.objects.raw("select * from kolibriauth_facilityuser where id in (select user_id from kolibriauth_role where kind in ('admin','coach'))")
 
     # if there is no admin or coach account on the device
@@ -94,6 +105,7 @@ def create_lessons(modulename, classroomname, facilityname=None):
             #   content_id: string,
             #   channel_id: string
             # }
+
             lesson_for_topic.resources = [{'contentnode_id': node.id, 'content_id': node.content_id, 'channel_id': node.channel_id} for node in child_nodes]
 
             # set the morango partition the lesson
