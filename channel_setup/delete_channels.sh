@@ -1,17 +1,58 @@
 #!/bin/bash
-echo "Importing numeracy playlists"
 
-# delete channels by specifying channel_id
+# Script to delete all numeracy channels from a device
 
-python -m kolibri manage deletechannel 3d6c9d72-a2e0-47d4-b7a0-ed20699e1b1f # Pre Alpha A
-python -m kolibri manage deletechannel 6380a6a9-8a4c-4b26-8b31-47ad1c7ada13 # Pre Alpha B
-python -m kolibri manage deletechannel 20113bf1-ba07-4e08-bcc7-faaca03ade8a # Pre Alpha C
-python -m kolibri manage deletechannel 1700bf9e-7109-4857-abf3-6c04a1963004 # Pre Alpha D
-python -m kolibri manage deletechannel 8784b9f7-8d58-4273-aff5-79b246529215 # Alpha A
-python -m kolibri manage deletechannel cc805378-86cb-498e-b564-242f44c87723 # Alpha B
-python -m kolibri manage deletechannel 7035e792-1ddf-489f-ad45-44c814a199fb # Alpha C
-python -m kolibri manage deletechannel 1d8f1428-da33-4779-b956-85c4581186c4 # Alpha D
-python -m kolibri manage deletechannel 57995474-194c-4068-bfed-1ee16108093f # Bravo A
-python -m kolibri manage deletechannel b7214b92-1fd9-4a1c-b758-821919bcd3e0 # Bravo B
-python -m kolibri manage deletechannel 5aee4435-135b-4039-a3a8-24d96f72bfcb # Bravo C
-python -m kolibri manage deletechannel 98ab8048-1075-45da-92e3-394409955526 # Bravo D
+# channel_ids
+#==============
+# Pre Alpha A - 3d6c9d72a2e047d4b7a0ed20699e1b1f
+# Pre Alpha B - 6380a6a98a4c4b268b3147ad1c7ada13
+# Pre Alpha C - 20113bf1ba074e08bcc7faaca03ade8a
+# Pre Alpha D - 1700bf9e71094857abf36c04a1963004
+# Alpha A - 8784b9f78d584273aff579b246529215
+# Alpha B - cc80537886cb498eb564242f44c87723
+# Alpha C - 7035e7921ddf489fad4544c814a199fb
+# Alpha D - 1d8f1428da334779b95685c4581186c4
+# Bravo A - 57995474194c4068bfed1ee16108093f
+# Bravo B - b7214b921fd94a1cb758821919bcd3e0
+# Bravo C - 5aee4435135b4039a3a824d96f72bfcb
+# Bravo D - 98ab8048107545da92e3394409955526
+# Grade 7 (Zambia) - 8d368058656544e2b7fe62eb2a632698
+
+
+delete_channels(){
+	
+	# Declare array containing all channel_ids
+	declare -a channel_ids=(
+		"3d6c9d72a2e047d4b7a0ed20699e1b1f"
+		"6380a6a98a4c4b268b3147ad1c7ada13"
+		"20113bf1ba074e08bcc7faaca03ade8a"
+		"1700bf9e71094857abf36c04a1963004"
+		"8784b9f78d584273aff579b246529215"
+		"cc80537886cb498eb564242f44c87723"
+		"7035e7921ddf489fad4544c814a199fb"
+		"1d8f1428da334779b95685c4581186c4"
+		"57995474194c4068bfed1ee16108093f"
+		"b7214b921fd94a1cb758821919bcd3e0"
+		"5aee4435135b4039a3a824d96f72bfcb"
+		"98ab8048107545da92e3394409955526"
+		"8d368058656544e2b7fe62eb2a632698"
+		)
+
+	# Inform the user that the deletion has begun
+	echo "Deleting all channels"
+
+	# To delete channels individually, 
+	# run the line below and insert the appropriate channel_id e.g
+	# python -m kolibri manage deletechannel <channel_id>
+
+	# Loop through channel_ids array
+	for channel in "${channel_ids[@]}"
+	do
+		# For each channel, delete by channel_id
+		python -m kolibri manage deletechannel "$channel"
+	done
+
+	echo "Done!"
+}
+
+delete_channels
