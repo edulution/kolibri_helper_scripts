@@ -1,8 +1,3 @@
-# A script to delete learners by user_id
-# Takes in the -f argument
-# A csv which contains the column id, the user_ids of the users to delete
-# Other columns may exist in the csv file but they will be ignored
-
 import kolibri # noqa F401
 import django
 
@@ -20,6 +15,16 @@ argParser.add_argument('--file', '-f', help='File containing user_ids of users t
 
 
 def delete_users(input_file):
+    """Function to delete users supplied in a csv file
+    The csv file is expected to have a column id (uuid of each user to be deleted)
+
+    Args:
+        input_file (string): Path to the file containig the ids of users to delete
+
+    Returns:
+        None
+    """
+
     # open the csv file provided and read each line into a dictionary data structure
     with open(input_file) as f:
         reader = csv.DictReader(f)
@@ -62,6 +67,7 @@ def delete_users(input_file):
             print('{} user(s) deleted but {} were supplied. Please check the errors above'.format(num_deleted, len(to_delete)))
 
 
+# Main function called when the script is run
 if __name__ == '__main__':
     args = argParser.parse_args()
     if args.file:

@@ -13,10 +13,19 @@ from kolibri.core.content.models import ContentNode, ChannelMetadata # noqa E402
 from le_utils.constants import content_kinds # noqa E402
 
 
-# creates 1 quiz for each topic in each channel having the module passed in (module specified in channel_module table)
-# each quiz contains 10 questions
-# e.g create_quizzes('numeracy','a1') will create 1 quiz for each topic in each numeracy channel
 def create_quizzes(modulename, classroomname, facilityname=None):
+    """Function that creates 1 quiz for each topic in each channel having the module passed in
+    each quiz contains 10 questions
+    e.g create_quizzes('numeracy','a1') will create 1 quiz for each topic in each numeracy channel
+
+    Args:
+        modulename (string): Name of the module
+        classroomname (string): Name of the classroom to create the quizzes in
+        facilityname (string): Name of the facility to create the quizzes for(default facility if not specified)
+
+    Returns:
+        None
+    """
     # set the seed that will be used to generate the sequence of exam_ids
     seed = random.randint(1, 100)
     # get or create the class to create the quizzes for

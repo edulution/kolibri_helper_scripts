@@ -1,8 +1,5 @@
-# Create new users from a csv file with the columns full name and username
-
 import kolibri # noqa F401
 import django
-# import all the helper functions
 import sys
 import uuid
 import csv
@@ -14,7 +11,7 @@ django.setup()
 
 from kolibri.core.auth.models import Facility, FacilityDataset, FacilityUser # noqa E402
 
-# Initalize argparse and define arguments that can be passed to this module
+# Initalize argparse and define command line args that can be passed to this module
 argParser = argparse.ArgumentParser()
 argParser.add_argument(
     '--file',
@@ -33,6 +30,17 @@ def_facility = str(Facility.get_default_facility().name)
 
 
 def create_users(input_file, facility=def_facility):
+    """Function to create new users from a csv file
+    The file is expected to have coolumns full_name and username. All other columns are ignored
+    The resulting users will have password == username
+
+    Args:
+        input_file (string): Path to the csv file containing the users
+        facility (string): Name of the facility in which to create the users(default facility if not specified)
+
+    Returns:
+        None
+    """
 
     # Initialize variable for number of users created
     num_created = 0
@@ -52,6 +60,7 @@ def create_users(input_file, facility=def_facility):
         # exit in an error state
         sys.exit('Learners were not created successfully. Check the error(s) above')
 
+    # Use csv dictreader to get the contents of the file
     with open(input_file) as f:
         reader = csv.DictReader(f)
         users = [r for r in reader]
@@ -98,13 +107,22 @@ def create_users(input_file, facility=def_facility):
         print('{} user(s) were created'.format(num_created))
 
 
+# Main function called when script is run
 if __name__ == '__main__':
     args = argParser.parse_args()
+    # If the file is supplied and facility is not supplied
+    # Create the users on the default facility
     if args.file and not(args.centre):
         open_file = args.file
         create_users(open_file)
 
+    # If both the file and the facility are supplied
+    # Create the users in the facility supplied
     elif args.file and args.centre:
         facility = args.centre
         open_file = args.file
         create_users(open_file, facility)
+
+    # If neither the file nor the facility are passed in, stop the script in an error state
+    else:
+        sys.exit('No arguments passed in. Please pass in the path to the file and centre_id (optional)')
