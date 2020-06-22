@@ -112,11 +112,10 @@ def get_or_create_classroom(classroomname, facilityname=None):
 
     # filter the collections objects to check if a class with the name passed in already exists
     # get a boolean of whether found or not
-    class_exists = Classroom.objects.filter(name=classroomname, parent=facility_for_class.id).exists()
+    class_exists = Classroom.objects.filter(name=classroomname).exists()
     if class_exists:
         # if the class already exists return a reference of the object
-        print('Class {} already exists in Facility {}'.format(classroomname, facility_for_class.name))
-        class_obj = Classroom.objects.get(name=classroomname, parent=facility_for_class)
+        raise ValueError('A Class with the name {} already exists on this device'.format(classroomname))
     else:
         print('Creating Class {} in Facility {}'.format(classroomname, facility_for_class.name))
         class_obj = Classroom.objects.create(name=classroomname, parent=facility_for_class)
