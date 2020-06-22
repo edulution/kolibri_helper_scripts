@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # update the subscriptions on each of the groups
-~/.kolibri_helper_scripts/insert_channel_subscriptions.sh
+~/.kolibri_helper_scripts/channel_setup/insert_channel_subscriptions.sh
 
 # get the live learners/coaches and insert them into the live learners table
 python ~/.kolibri_helper_scripts/get_live_learners.py
