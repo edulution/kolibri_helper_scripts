@@ -2,13 +2,12 @@
 import kolibri # noqa F401
 import django
 import random
-import sys
 import uuid
-from helpers import get_or_create_classroom, get_or_create_learnergroup
+from helpers import get_channels_in_module, get_facility_or_default, get_or_create_classroom, get_or_create_learnergroup, get_admins_for_facility
 django.setup()
 
 # import all the helper functions
-from kolibri.core.auth.models import FacilityUser # noqa E402
+from kolibri.core.auth.models import Facility, FacilityUser # noqa E402
 from kolibri.core.lessons.models import Lesson, LessonAssignment # noqa E402
 from kolibri.core.content.models import ContentNode, ChannelMetadata # noqa E402
 
@@ -26,6 +25,9 @@ def create_lessons(modulename, classroomname, facilityname=None):
         None
     """
 
+    # get a reference to the facility to create the lessons in
+    facility_for_lessons = get_facility_or_default(facilityname)
+
     # set the seed that will be used to generate the sequence of lesson_ids
     seed = random.randint(1, 100)
     # get or create the class to create the lessons for
@@ -34,28 +36,13 @@ def create_lessons(modulename, classroomname, facilityname=None):
 
     # get a list of the admin and coach accounts on the device
     # use raw query because __in ORM method doesn't work with uuid data type
-    admins = FacilityUser.objects.raw("select * from kolibriauth_facilityuser where id in (select user_id from kolibriauth_role where kind in ('admin','coach'))")
-
-    # if there is no admin or coach account on the device
-    # raise an error and terminate the script
-    if len(list(admins)) == 0:
-        raise ValueError('There is no Admin or Coach account on the device. Cannot create lessons without an Admin or Coach account ')
-        sys.exit()
-    else:
-        # if admin accounts exist, choose the first one and use it to create and assign the lessons
-        admin_for_lessons = admins[0]
+    admin_for_lessons = get_admins_for_facility(facility_for_lessons)[0]
 
     # get all channels with the module passed in
-    channels = ChannelMetadata.objects.raw("select * from content_channelmetadata where id in (select channel_id from channel_module where module = %s)", [modulename.lower()])
+    channels = get_channels_in_module(modulename)
 
     # get a list of all the channel ids for the channels in the above query
     channel_ids = [channel.id for channel in channels]
-
-    # if there are no channel_ids, then there are no channels that have the module requested
-    # raise an error and terminate the script
-    if len(channel_ids) == 0:
-        raise ValueError('There are no channels with a Module called {}. Cannot create lessons without channels '.format(modulename))
-        sys.exit()
 
     # loop through the channels with the module passed in
     for channel_id in channel_ids:

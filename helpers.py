@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from kolibri.core.exams.models import Exam
 from kolibri.core.lessons.models import Lesson
 from kolibri.core.auth.models import Facility, FacilityUser, Classroom, LearnerGroup, Role
+from kolibri.core.content.models import ChannelMetadata
 
 
 def delete_all_lessons_for_class(classroomname, facilityname=None):
@@ -115,7 +116,7 @@ def get_or_create_classroom(classroomname, facilityname=None):
     class_exists = Classroom.objects.filter(name=classroomname).exists()
     if class_exists:
         # if the class already exists return a reference of the object
-        raise ValueError('A Class with the name {} already exists on this device'.format(classroomname))
+        class_obj = Classroom.objects.get(name=classroomname, parent=facility_for_class)
     else:
         print('Creating Class {} in Facility {}'.format(classroomname, facility_for_class.name))
         class_obj = Classroom.objects.create(name=classroomname, parent=facility_for_class)
@@ -293,3 +294,58 @@ def change_password(id, new_password):
 # morango_source = uuid
 # morango_partition = dataset_id
 # dataset_id = generated when new facility is created
+
+
+def get_channels_in_module(modulename):
+    """Function to get all channels with the module passed in
+    Uses channel_metadata and channel_module tables
+        Args:
+            modulename (string): The module to get channels for
+
+        Returns:
+            A list of ChannelMetadata objects
+    """
+
+    # Query to get all channels that have the module specified
+    channels_query = """select * from content_channelmetadata
+    where id in
+    (select channel_id from channel_module where module = '{}')""".format(modulename.lower())
+
+    # Use the query to get ChannelMetadata objects
+    # can't use django ORM __in method because it doesnt work on uuid data type
+    # Convert the rawquery to a list
+    channels = list(ChannelMetadata.objects.raw(channels_query))
+
+    # check that the channels for the passed in module exist
+    if len(channels) == 0:
+        # Raise a value error and exist the script if the list is empty
+        raise ValueError("""No channels with the module {} were found.
+            Check that the expected channel(s) have been imported, and exist in channel_module""".format(modulename))
+        sys.exit()
+
+    # Return a list ChannelMetadata objects
+    return channels
+
+
+def get_admins_for_facility(facility):
+    """Get a list of admins and coaches for a Facility
+        Args:
+            facility (Facility): A Facility object
+        Returns:
+            A list of FacilityUser objects containing the admins and coaches for the Facility
+    """
+
+    admins_query = """select * from kolibriauth_facilityuser
+    where id in
+    (select user_id from kolibriauth_role where kind in ('admin','coach'))
+    and facility_id = '{}'""".format(facility.id)
+
+    admins = list(FacilityUser.objects.raw(admins_query))
+
+    # if there is no admin or coach account on the device
+    # raise an error and terminate the script
+    if len(admins) == 0:
+        raise ValueError('There is no Admin or Coach account on the device. Cannot create quizzes without an Admin or Coach account ')
+        sys.exit()
+
+    return admins
