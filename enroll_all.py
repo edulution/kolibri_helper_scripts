@@ -8,7 +8,7 @@ django.setup()
 from kolibri.core.auth.models import Collection, FacilityUser, Membership # noqa E402
 
 # get a reference to all of the classrooms called live learners across the device
-live_learners_classes = Collection.objects.filter(name='Live Learners')
+live_learners_classes = Collection.objects.filter(name__contains='Live Learners')
 
 # convert the iterable above into a dictionary
 # the parent_id(facility_id) of the classroom is the key, and the classroom itself is the value
@@ -16,7 +16,11 @@ class_dict = {c.parent_id: c for c in live_learners_classes}
 
 # get a list of all the users on the device
 # use raw SQL to get users that are not admins or coaches
-all_users = FacilityUser.objects.raw("select * from kolibriauth_facilityuser where id not in (select user_id from kolibriauth_role where kind in ('admin','coach'))")
+all_users_query = """select * from kolibriauth_facilityuser
+where id not in
+(select user_id from kolibriauth_role where kind in ('admin','coach'))"""
+
+all_users = FacilityUser.objects.raw(all_users_query)
 
 # delete all memberships
 Membership.objects.all().delete()
