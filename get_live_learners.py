@@ -14,8 +14,13 @@ import psycopg2
 django.setup()
 
 
-# function to get learners that were active based on kolibri idle session timeout and return their user_ids
 def get_live_learners():
+    """Get learners that are active based on Kolibri idle session timeout
+        Args:
+            None
+        Returns:
+            A list of user_ids of the learners currently logged in
+    """
     # get kolibri idle session timeout as an integer
     sess_timeout = int(os.environ['KOLIBRI_SESSION_TIMEOUT'])
     # initalize cut-off time using kolibri idle session timeout to decide which learners qualify as live learners
@@ -25,22 +30,29 @@ def get_live_learners():
         connection.ensure_connection()
 
         # live learners are learners that have been active in the last 10 minutes
-        # get all usersessionlogs where the last interaction timestamp is greater or equal to current time minus 10 minutes
+        # get all usersessionlogs
+        # where the last interaction timestamp is greater or equal to current time minus kolibri idle seesion timeout
         live_sessions = UserSessionLog.objects.filter(last_interaction_timestamp__gte=live_learners_cutoff).values('user_id').distinct()
 
         # get array of user_ids of live learners
         live_learners = [user.get('user_id') for user in live_sessions]
 
     except OperationalError:
-        # catch operational errors and print the error to the console
-        print('Database unavailable, impossible to retrieve users and sessions info')
+        # catch operational errors and inform the user
+        print('Database unavailable, not able to retrieve users and sessions info')
 
     # return an array of user_ids of live learners
     return live_learners
 
 
-# function to insert an array of live learners into the live_learners table in the kolibri database
 def insert_live_learners_into_db(live_learners_arr):
+    """Insert an array of live learners into the live_learners table in the baseline database
+        Args:
+            A list of user_ids
+        Returns:
+            None
+    """
+
     # get the database credentials from environment variables
     dbname = os.environ['BASELINE_DATABASE_NAME']
     dbpassword = os.environ['BASELINE_DATABASE_PASSWORD']
@@ -78,6 +90,7 @@ def insert_live_learners_into_db(live_learners_arr):
 
 
 # main excecution of script
+# Get the live learners then insert them into live learners table
 if __name__ == '__main__':
     live_learners = get_live_learners()
     insert_live_learners_into_db(live_learners)

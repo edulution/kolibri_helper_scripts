@@ -29,6 +29,21 @@ def_facility = str(Facility.get_default_facility().name)
 
 
 def insert_users(input_file, facility=def_facility):
+    """Insert users into a Facility from a csv file.
+    Fields expected in the csv file:
+        id
+        full_name
+        username
+    Generally used to recreate users that already existed before without generating new user_ids
+
+        Args:
+            input_file (string): Path to the input csv file
+            facility (string): The name of the facility, default is the first facility that was created on a device
+
+        Returns:
+            None
+    """
+
     # get a reference to the Facility with the name supplied and it's dataset_id
     try:
         facility_obj = Facility.objects.get(name=facility)
