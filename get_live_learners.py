@@ -2,6 +2,8 @@
 import kolibri # noqa F401
 import django
 
+django.setup() # noqa F401
+
 # import other libraries required
 import os
 from datetime import timedelta
@@ -10,8 +12,6 @@ from django.utils import timezone
 from kolibri.core.logger.models import UserSessionLog
 from kolibri.core.auth.models import OperationalError
 import psycopg2
-
-django.setup()
 
 
 def get_live_learners():
