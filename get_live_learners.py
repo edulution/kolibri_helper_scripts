@@ -10,7 +10,7 @@ from datetime import timedelta
 from django.db import connection
 from django.utils import timezone
 from kolibri.core.logger.models import UserSessionLog
-from kolibri.core.auth.models import OperationalError
+from django.db.utils import OperationalError
 import psycopg2
 
 
