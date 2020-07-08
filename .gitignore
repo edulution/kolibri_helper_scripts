@@ -1,3 +1,5 @@
 *.pyc
 sandbox.py
 *.csv
+.pytest_cache
+__pycache__
