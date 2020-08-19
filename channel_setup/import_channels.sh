@@ -14,6 +14,8 @@
 # Bravo B - b7214b921fd94a1cb758821919bcd3e0
 # Bravo C - 5aee4435135b4039a3a824d96f72bfcb
 # Bravo D - 98ab8048107545da92e3394409955526
+# Grade 7 (Zambia) - 8d368058656544e2b7fe62eb2a632698
+# Coach Professional Development - 2c8cd5f3a4694adbb4be45025d9ca3dc
 
 # Default directory to look for Kolibri content
 DEFAULT_CONTENT_DIR=/opt/KOLIBRI_DATA/
@@ -36,6 +38,8 @@ import_channels_local(){
 		"b7214b921fd94a1cb758821919bcd3e0"
 		"5aee4435135b4039a3a824d96f72bfcb"
 		"98ab8048107545da92e3394409955526"
+		"8d368058656544e2b7fe62eb2a632698"
+		"2c8cd5f3a4694adbb4be45025d9ca3dc"
 		)
 
 	# Inform the user that the importing has begun
@@ -53,6 +57,8 @@ import_channels_local(){
 		python -m kolibri manage importchannel -- disk "$channel" "$CONTENT_DIR"
 		python -m kolibri manage importcontent -- disk "$channel" "$CONTENT_DIR"
 	done
+
+	echo "Done!"
 }
 
 import_channels_local "$1"

@@ -2,8 +2,7 @@
 
 # export the python path
 
-# Order the channels with Pre Alpha channels appearing first and Bravo last
-
+# Order the channels with Pre Alpha channels appearing first and Coach Professional Development last
 
 python -m kolibri manage setchannelposition 3d6c9d72-a2e0-47d4-b7a0-ed20699e1b1f 1 #Pre Alpha A
 
@@ -28,3 +27,10 @@ python -m kolibri manage setchannelposition b7214b92-1fd9-4a1c-b758-821919bcd3e0
 python -m kolibri manage setchannelposition 5aee4435-135b-4039-a3a8-24d96f72bfcb 11 #Bravo C
 
 python -m kolibri manage setchannelposition 98ab8048-1075-45da-92e3-394409955526 12 #Bravo D
+
+python -m kolibri manage setchannelposition 8d368058-6565-44e2-b7fe-62eb2a632698 13 #Grade 7
+
+python -m kolibri manage setchannelposition 2c8cd5f3-a469-4adb-b4be-45025d9ca3dc 14 #Coach Professional Development
+
+
+echo "Successfully reordered channels"
