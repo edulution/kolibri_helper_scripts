@@ -4,10 +4,12 @@ import django
 import sys
 import csv
 import argparse
-from kolibri.core.auth.models import FacilityUser
+
 from django.core.exceptions import ObjectDoesNotExist
 
 django.setup()
+
+from kolibri.core.auth.models import FacilityUser # noqa E402
 
 argParser = argparse.ArgumentParser()
 
