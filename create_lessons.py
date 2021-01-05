@@ -1,19 +1,26 @@
 # import kolibri and django to ensure that the script runs in kolibri shell
-import kolibri # noqa F401
+import kolibri  # noqa F401
 import django
 import random
 import uuid
-from helpers import get_channels_in_module, get_facility_or_default, get_or_create_classroom, get_or_create_learnergroup, get_admins_for_facility
+from helpers import (
+    get_channels_in_module,
+    get_facility_or_default,
+    get_or_create_classroom,
+    get_or_create_learnergroup,
+    get_admins_for_facility,
+)
+
 django.setup()
 
 # import all the helper functions
-from kolibri.core.auth.models import Facility, FacilityUser # noqa E402
-from kolibri.core.lessons.models import Lesson, LessonAssignment # noqa E402
-from kolibri.core.content.models import ContentNode, ChannelMetadata # noqa E402
+from kolibri.core.auth.models import Facility, FacilityUser  # noqa E402
+from kolibri.core.lessons.models import Lesson, LessonAssignment  # noqa E402
+from kolibri.core.content.models import ContentNode, ChannelMetadata  # noqa E402
 
 
 def create_lessons(modulename, classroomname, facilityname=None):
-    """ Function to create 1  Lesson for each topic in each Channel for a specified Module, then assign them to a Classroom.
+    """Function to create 1  Lesson for each topic in each Channel for a specified Module, then assign them to a Classroom.
     The Classroom object is created if it does not exist.
 
     Args:
@@ -51,9 +58,11 @@ def create_lessons(modulename, classroomname, facilityname=None):
 
         # channels are found in topics but have no parent_id and id == parent_id
         # get all topics by getting all contentnodes of type topic which fulfil criteria above
-        topics = ContentNode.objects.filter(
-            kind='topic', parent_id=channel_id
-            ).exclude(parent_id__isnull=True).order_by('sort_order')
+        topics = (
+            ContentNode.objects.filter(kind="topic", parent_id=channel_id)
+            .exclude(parent_id__isnull=True)
+            .order_by("sort_order")
+        )
 
         # get contentnode_ids of all the topics as an array
         topic_ids = [topic.id for topic in topics]
@@ -61,13 +70,19 @@ def create_lessons(modulename, classroomname, facilityname=None):
         # begin looping through topics
         for topic_id in topic_ids:
             # create the title for the lesson using the  title of the topic + the channel name
-            lesson_title = str(ContentNode.objects.get(id=topic_id).title)+' - '+channel_name
+            lesson_title = (
+                str(ContentNode.objects.get(id=topic_id).title) + " - " + channel_name
+            )
 
             # lesson titles have a constraint of 50 characters
             # if this is exceeded, remove the difference from the topic title
             if len(lesson_title) > 50:
                 diff_len = len(lesson_title) - 50
-                lesson_title = str(ContentNode.objects.get(id=topic_id).title[:-diff_len])+' - '+channel_name
+                lesson_title = (
+                    str(ContentNode.objects.get(id=topic_id).title[:-diff_len])
+                    + " - "
+                    + channel_name
+                )
 
             # instantiate a new lesson object for the topic
             # title, collection and created by are needed to instantiate a lesson object. Other attributes can be set later
@@ -77,13 +92,11 @@ def create_lessons(modulename, classroomname, facilityname=None):
                 title=lesson_title,
                 collection=class_for_lessons,
                 created_by=admin_for_lessons,
-                _morango_source_id=uuid.uuid4()
-                 )
+                _morango_source_id=uuid.uuid4(),
+            )
 
             # get the child nodes of the topic
-            child_nodes = ContentNode.objects.filter(
-                parent_id=topic_id
-                )
+            child_nodes = ContentNode.objects.filter(parent_id=topic_id)
 
             # create an array of the resources for the lesson
             # structure of content resource in a lesson
@@ -93,26 +106,43 @@ def create_lessons(modulename, classroomname, facilityname=None):
             #   channel_id: string
             # }
 
-            lesson_for_topic.resources = [{'contentnode_id': node.id, 'content_id': node.content_id, 'channel_id': node.channel_id} for node in child_nodes]
+            lesson_for_topic.resources = [
+                {
+                    "contentnode_id": node.id,
+                    "content_id": node.content_id,
+                    "channel_id": node.channel_id,
+                }
+                for node in child_nodes
+            ]
 
             # set the morango partition the lesson
             lesson_for_topic._morango_partition = lesson_for_topic.calculate_partition()
 
             # inform the user that the lesson has been created
-            print('Created Lesson {} with {} resources'.format(lesson_title, len(lesson_for_topic.resources)))
+            print(
+                "Created Lesson {} with {} resources".format(
+                    lesson_title, len(lesson_for_topic.resources)
+                )
+            )
 
             # get or create a group with the same name as the channel and assign the lesson to it
-            group_for_lesson = get_or_create_learnergroup(channel_name, classroomname, facilityname)
+            group_for_lesson = get_or_create_learnergroup(
+                channel_name, classroomname, facilityname
+            )
 
             # create a new lesson assignment object
             LessonAssignment.objects.create(
                 lesson=lesson_for_topic,
                 collection=group_for_lesson,
-                assigned_by=admin_for_lessons
-                )
+                assigned_by=admin_for_lessons,
+            )
 
             # inform the user that the lesson has been created
-            print('Lesson {} successfully assigned to Group {}'.format(lesson_title, str(group_for_lesson.name)))
+            print(
+                "Lesson {} successfully assigned to Group {}".format(
+                    lesson_title, str(group_for_lesson.name)
+                )
+            )
 
             # activate the lesson
             lesson_for_topic.is_active = True

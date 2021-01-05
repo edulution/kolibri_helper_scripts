@@ -1,4 +1,4 @@
-import kolibri # noqa F401
+import kolibri  # noqa F401
 import django
 
 import sys
@@ -10,18 +10,20 @@ from django.core.exceptions import ObjectDoesNotExist
 
 django.setup()
 
-from kolibri.core.auth.models import Facility, FacilityUser # noqa F402
+from kolibri.core.auth.models import Facility, FacilityUser  # noqa F402
 
 # Initalize argparse and define all of the arguments to this module
 argParser = argparse.ArgumentParser()
 argParser.add_argument(
-    '--file',
-    '-f',
-    help='CSV file to import users from. Must contain the fields id,username,full_name')
+    "--file",
+    "-f",
+    help="CSV file to import users from. Must contain the fields id,username,full_name",
+)
 argParser.add_argument(
-    '--centre',
-    '-c',
-    help='Name of Facility( centre_id) in the case of multiple facilities on 1 device')
+    "--centre",
+    "-c",
+    help="Name of Facility( centre_id) in the case of multiple facilities on 1 device",
+)
 
 
 # get the name of the default facility on the device
@@ -54,30 +56,33 @@ def insert_users(input_file, facility=def_facility):
         # catch the exception when the object does not exist
     except ObjectDoesNotExist:
         # print out the id that does not exist
-        print('Error: Facility with the name {} does not exist'.format(facility))
+        print("Error: Facility with the name {} does not exist".format(facility))
         # exit in an error state
-        sys.exit('Learners were not inserted successfully. Check the error(s) above')
+        sys.exit("Learners were not inserted successfully. Check the error(s) above")
     with open(input_file) as f:
         reader = csv.DictReader(f)
         users = [r for r in reader]
 
         for user in users:
-            _morango_partition = "{dataset_id}:user-ro:{user_id}".format(dataset_id=dataset_id, user_id=user['id'])
+            _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
+                dataset_id=dataset_id, user_id=user["id"]
+            )
             FacilityUser.objects.create(
-                id=user['id'],
-                full_name=user['full_name'],
-                username=user['username'],
-                password=make_password(user['username']),
+                id=user["id"],
+                full_name=user["full_name"],
+                username=user["username"],
+                password=make_password(user["username"]),
                 dataset_id=dataset_id,
                 facility_id=facility_id,
                 _morango_partition=_morango_partition,
-                _morango_source_id=uuid.uuid4())
-            print('Created user: {}'.format(user['full_name']))
+                _morango_source_id=uuid.uuid4(),
+            )
+            print("Created user: {}".format(user["full_name"]))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = argParser.parse_args()
-    if args.file and not(args.centre):
+    if args.file and not (args.centre):
         open_file = args.file
         insert_users(open_file)
 
@@ -86,4 +91,6 @@ if __name__ == '__main__':
         open_file = args.file
         insert_users(open_file, facility)
     else:
-        sys.exit('No arguments passed in. Please pass in the path of the file and centre_id (optional)')
+        sys.exit(
+            "No arguments passed in. Please pass in the path of the file and centre_id (optional)"
+        )

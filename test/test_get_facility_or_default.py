@@ -1,14 +1,15 @@
-import pytest # noqa F401
-import kolibri # noqa F401
+import pytest  # noqa F401
+import kolibri  # noqa F401
 import django
 
 django.setup()
 
-from kolibri.core.auth.models import Facility # noqa F401
+from kolibri.core.auth.models import Facility  # noqa F401
 
-import sys # noqa F401
-sys.path.append('../')
-from helpers import create_facility, get_facility_or_default # noqa F401
+import sys  # noqa F401
+
+sys.path.append("../")
+from helpers import create_facility, get_facility_or_default  # noqa F401
 
 # Fixture to create a facility for the tests, then tear it down
 @pytest.fixture
@@ -38,17 +39,17 @@ class TestFacilityHelpers:
         get_facitity = get_facility_or_default()
 
         # check that the two facility_ids are equal
-        assert(def_facility.id == get_facitity.id)
+        assert def_facility.id == get_facitity.id
 
     def test_get_other_facility_that_exists(self, setup_teardown_facility):
         # Attempt to get a facility called Shangri La
         other_fac = get_facility_or_default("Shangri La")
         # The facility id of this facility
         # should be equal to the one created in setup_teardown
-        assert(other_fac.id == setup_teardown_facility.id)
+        assert other_fac.id == setup_teardown_facility.id
 
     def test_get_facility_that_doesnt_exist(self):
         # Attempt to get a facility that does not exist on the device
         # Expect to get value error when ran with random string
         with pytest.raises(ValueError):
-            get_facility_or_default('g6oLjw')
+            get_facility_or_default("g6oLjw")

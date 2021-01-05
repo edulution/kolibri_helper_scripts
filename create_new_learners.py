@@ -1,4 +1,4 @@
-import kolibri # noqa F401
+import kolibri  # noqa F401
 import django
 import sys
 import uuid
@@ -9,19 +9,21 @@ from django.core.exceptions import ObjectDoesNotExist
 
 django.setup()
 
-from kolibri.core.auth.models import Facility, FacilityDataset, FacilityUser # noqa E402
+from kolibri.core.auth.models import (
+    Facility,
+    FacilityDataset,
+    FacilityUser,
+)  # noqa E402
 
 # Initalize argparse and define command line args that can be passed to this module
 argParser = argparse.ArgumentParser()
-argParser.add_argument(
-    '--file',
-    '-f',
-    help='File to create users from')
+argParser.add_argument("--file", "-f", help="File to create users from")
 
 argParser.add_argument(
-    '--centre',
-    '-c',
-    help='Name of Facility( centre_id) in the case of multiple facilities on 1 device')
+    "--centre",
+    "-c",
+    help="Name of Facility( centre_id) in the case of multiple facilities on 1 device",
+)
 
 
 # Get the name of the default facility on the device
@@ -56,9 +58,9 @@ def create_users(input_file, facility=def_facility):
     # Catch the exception when the Facility does not exist
     except ObjectDoesNotExist:
         # Print out the name of the Facility that does not exist and terminate the script
-        print('Error: Facility with the name {} does not exist'.format(facility))
+        print("Error: Facility with the name {} does not exist".format(facility))
         # exit in an error state
-        sys.exit('Learners were not created successfully. Check the error(s) above')
+        sys.exit("Learners were not created successfully. Check the error(s) above")
 
     # Use csv dictreader to get the contents of the file
     with open(input_file) as f:
@@ -68,11 +70,17 @@ def create_users(input_file, facility=def_facility):
         # Loop through the list of users read from the input file
         for user in users:
 
-            user_exists = FacilityUser.objects.filter(username=user['username'], facility_id=facility_id).exists()
+            user_exists = FacilityUser.objects.filter(
+                username=user["username"], facility_id=facility_id
+            ).exists()
             if user_exists:
                 # if a user with the same username already exists in the facility
                 # raise a value error and terminate the script
-                raise ValueError('Duplicate username. There is already a user called {}'.format(user['username']))
+                raise ValueError(
+                    "Duplicate username. There is already a user called {}".format(
+                        user["username"]
+                    )
+                )
                 sys.exit()
             else:
                 # Create the user
@@ -80,21 +88,28 @@ def create_users(input_file, facility=def_facility):
                 new_user_id = uuid.uuid4()
 
                 # Use the new user_id and the dataset_id to generate the morango partition
-                _morango_partition = "{dataset_id}:user-ro:{user_id}".format(dataset_id=dataset_id, user_id=new_user_id)
+                _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
+                    dataset_id=dataset_id, user_id=new_user_id
+                )
 
                 # Create the new FacilityUser object
                 FacilityUser.objects.create(
                     id=new_user_id,
-                    full_name=user['full_name'],
-                    username=user['username'],
-                    password=make_password(user['username']),
+                    full_name=user["full_name"],
+                    username=user["username"],
+                    password=make_password(user["username"]),
                     dataset_id=dataset_id,
                     facility_id=facility_id,
                     _morango_partition=_morango_partition,
-                    _morango_source_id=uuid.uuid4())
+                    _morango_source_id=uuid.uuid4(),
+                )
 
                 # Print out the full name of the user that has been created
-                print('Created user: {} in Facility {}'.format(user['full_name'], str(facility_obj.name)))
+                print(
+                    "Created user: {} in Facility {}".format(
+                        user["full_name"], str(facility_obj.name)
+                    )
+                )
 
                 # Increment the number of users created by one
                 num_created += 1
@@ -102,17 +117,17 @@ def create_users(input_file, facility=def_facility):
     # Print out the total number of users that were created
     if num_created == 0:
         # If not learners were created, something is wrong and there will be errors displayed in the console
-        print('No learners were created. Kindly check the errors above')
+        print("No learners were created. Kindly check the errors above")
     else:
-        print('{} user(s) were created'.format(num_created))
+        print("{} user(s) were created".format(num_created))
 
 
 # Main function called when script is run
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = argParser.parse_args()
     # If the file is supplied and facility is not supplied
     # Create the users on the default facility
-    if args.file and not(args.centre):
+    if args.file and not (args.centre):
         open_file = args.file
         create_users(open_file)
 
@@ -125,4 +140,6 @@ if __name__ == '__main__':
 
     # If neither the file nor the facility are passed in, stop the script in an error state
     else:
-        sys.exit('No arguments passed in. Please pass in the path to the file and centre_id (optional)')
+        sys.exit(
+            "No arguments passed in. Please pass in the path to the file and centre_id (optional)"
+        )

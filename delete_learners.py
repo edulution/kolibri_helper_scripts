@@ -1,4 +1,4 @@
-import kolibri # noqa F401
+import kolibri  # noqa F401
 import django
 
 import sys
@@ -9,11 +9,13 @@ from django.core.exceptions import ObjectDoesNotExist
 
 django.setup()
 
-from kolibri.core.auth.models import FacilityUser # noqa E402
+from kolibri.core.auth.models import FacilityUser  # noqa E402
 
 argParser = argparse.ArgumentParser()
 
-argParser.add_argument('--file', '-f', help='File containing user_ids of users to delete')
+argParser.add_argument(
+    "--file", "-f", help="File containing user_ids of users to delete"
+)
 
 
 def delete_users(input_file):
@@ -45,7 +47,7 @@ def delete_users(input_file):
             # catch the exception when the object does not exist
             except ObjectDoesNotExist:
                 # print out the id that does not exist
-                print('Error: User with id {} does not exist'.format(user["id"]))
+                print("Error: User with id {} does not exist".format(user["id"]))
                 # continue to the next iteration of the loop
                 continue
             # get the full name of the user from the database
@@ -57,23 +59,27 @@ def delete_users(input_file):
             FacilityUser.objects.get(id=user["id"]).delete()
 
             # print out a message containing the name of the user that was deleted
-            print('User {} deleted'.format(user_to_delete))
+            print("User {} deleted".format(user_to_delete))
 
             # increment the counter by 1
             num_deleted += 1
 
         # once the loop completes, print out the number of users that were deleted
         if len(to_delete) == num_deleted:
-            print('Done! {} users were deleted'.format(num_deleted))
+            print("Done! {} users were deleted".format(num_deleted))
         else:
-            print('{} user(s) deleted but {} were supplied. Please check the errors above'.format(num_deleted, len(to_delete)))
+            print(
+                "{} user(s) deleted but {} were supplied. Please check the errors above".format(
+                    num_deleted, len(to_delete)
+                )
+            )
 
 
 # Main function called when the script is run
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = argParser.parse_args()
     if args.file:
         open_file = args.file
         delete_users(open_file)
     else:
-        sys.exit('Please supply a file containing the users to delete')
+        sys.exit("Please supply a file containing the users to delete")
