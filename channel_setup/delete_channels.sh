@@ -17,7 +17,8 @@
 # Bravo C - 5aee4435135b4039a3a824d96f72bfcb
 # Bravo D - 98ab8048107545da92e3394409955526
 # Grade 7 (Zambia) - 8d368058656544e2b7fe62eb2a632698
-# Coach Professional Development - 2c8cd5f3a4694adbb4be45025d9ca3dc
+# Coach Professional Development - 2c8cd5f3a4694adbb4be45025d9ca3dc - old 
+# Coach Professional Development - 19ea4c94ee484cb0b5bb617f5511f4c1
 
 delete_channels(){
 	
@@ -36,7 +37,7 @@ delete_channels(){
 		"5aee4435135b4039a3a824d96f72bfcb"
 		"98ab8048107545da92e3394409955526"
 		"8d368058656544e2b7fe62eb2a632698"
-		"2c8cd5f3a4694adbb4be45025d9ca3dc"
+		"19ea4c94ee484cb0b5bb617f5511f4c1"
 		)
 
 	# Inform the user that the deletion has begun
@@ -51,6 +52,7 @@ delete_channels(){
 	do
 		# For each channel, delete by channel_id
 		python -m kolibri manage deletechannel "$channel"
+		# python -m kolibri manage deletechannel "$channel"
 	done
 
 	echo "Done!"
