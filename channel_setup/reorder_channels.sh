@@ -30,7 +30,6 @@ python -m kolibri manage setchannelposition 98ab8048-1075-45da-92e3-394409955526
 
 python -m kolibri manage setchannelposition 8d368058-6565-44e2-b7fe-62eb2a632698 13 #Grade 7
 
-python -m kolibri manage setchannelposition 2c8cd5f3-a469-4adb-b4be-45025d9ca3dc 14 #Coach Professional Development
-
+python -m kolibri manage setchannelposition 19ea4c94 ee48-4cb0 b5bb-617f5511f4c1 14 #Coach Professional Development
 
 echo "Successfully reordered channels"
