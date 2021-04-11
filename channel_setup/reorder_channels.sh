@@ -28,8 +28,10 @@ python -m kolibri manage setchannelposition 5aee4435-135b-4039-a3a8-24d96f72bfcb
 
 python -m kolibri manage setchannelposition 98ab8048-1075-45da-92e3-394409955526 12 #Bravo D
 
-python -m kolibri manage setchannelposition 8d368058-6565-44e2-b7fe-62eb2a632698 13 #Grade 7
+python -m kolibri manage setchannelposition 8d368058-6565-44e2-b7fe-62eb2a632698 13 #Grade 7 - Numeracy
 
-python -m kolibri manage setchannelposition 19ea4c94 ee48-4cb0 b5bb-617f5511f4c1 14 #Coach Professional Development
+# python -m kolibri manage setchannelposition "Removed the double quotation and insert channel id for Grade 7 Literacy" 14 #Grade 7 - Literacy
+
+python -m kolibri manage setchannelposition 19ea4c94 ee48-4cb0 b5bb-617f5511f4c1 15 #Coach Professional Development
 
 echo "Successfully reordered channels"
