@@ -15,7 +15,7 @@
 # Bravo C - 5aee4435135b4039a3a824d96f72bfcb
 # Bravo D - 98ab8048107545da92e3394409955526
 # Grade 7 (Numeracy - Zambia) - 8d368058656544e2b7fe62eb2a632698
-# Grade 7 (Literacy - Zambia) - 
+# Grade 7 (Literacy - Zambia) - 96578ffc06e44a46b021540cb217f9c9
 # Coach Professional Development - 19ea4c94ee484cb0b5bb617f5511f4c1
 
 
@@ -41,7 +41,7 @@ import_channels_local(){
 		"5aee4435135b4039a3a824d96f72bfcb"
 		"98ab8048107545da92e3394409955526"
 		"8d368058656544e2b7fe62eb2a632698"
-		# ""
+		"96578ffc06e44a46b021540cb217f9c9"
 		"19ea4c94ee484cb0b5bb617f5511f4c1"
 		)
 

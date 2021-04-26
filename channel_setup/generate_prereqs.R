@@ -9,11 +9,11 @@ library(pool)
 # Create a pool connection to the local Kolibri database
 kol_pool <- dbPool(
   drv = RPostgreSQL::PostgreSQL(),
-  dbname = Sys.getenv("KOLIBRI_DATABASE_NAME"),
-  host = Sys.getenv("KOLIBRI_DATABASE_HOST"),
-  user = Sys.getenv("KOLIBRI_DATABASE_USER"),
-  password = Sys.getenv("KOLIBRI_DATABASE_PASSWORD"),
-  port = Sys.getenv("KOLIBRI_DATABASE_PORT")
+  dbname = Sys.getenv("kolibri"),
+  host = Sys.getenv("localhost"),
+  user = Sys.getenv("CurContent2019"),
+  password = Sys.getenv("CurContent2019"),
+  port = Sys.getenv(5432)
 )
 
 # get channel metadata

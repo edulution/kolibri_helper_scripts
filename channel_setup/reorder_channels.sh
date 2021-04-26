@@ -2,7 +2,7 @@
 
 # export the python path
 
-# Order the channels with Pre Alpha channels appearing first and Coach Professional Development last
+# Order the channels with Pre Alpha Channels Playlists appearing first and Coach Professional Development last
 
 python -m kolibri manage setchannelposition 3d6c9d72-a2e0-47d4-b7a0-ed20699e1b1f 1 #Pre Alpha A
 
@@ -28,10 +28,10 @@ python -m kolibri manage setchannelposition 5aee4435-135b-4039-a3a8-24d96f72bfcb
 
 python -m kolibri manage setchannelposition 98ab8048-1075-45da-92e3-394409955526 12 #Bravo D
 
-python -m kolibri manage setchannelposition 8d368058-6565-44e2-b7fe-62eb2a632698 13 #Grade 7 - Numeracy
+python -m kolibri manage setchannelposition 8d368058-6565-44e2-b7fe-62eb2a632698 13 #Grade 7 - Numeracy(Zambia)
 
-# python -m kolibri manage setchannelposition "Removed the double quotation and insert channel id for Grade 7 Literacy" 14 #Grade 7 - Literacy
+python -m kolibri manage setchannelposition 96578ffc-06e4-4a46-b021-540cb217f9c9 14 #Grade 7 - Literacy(Zambia)
 
 python -m kolibri manage setchannelposition 19ea4c94 ee48-4cb0 b5bb-617f5511f4c1 15 #Coach Professional Development
 
-echo "Successfully reordered channels"
+echo "Successfully reordered Channels Playlists"
