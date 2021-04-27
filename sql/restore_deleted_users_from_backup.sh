@@ -1,10 +1,8 @@
-/*WIP*/
-/*Restore users from a past backup
-or transfer users from one database to another (remember to update facility_id)
-*/
+# WIP
+# Restore users from a past backup
+# or transfer users from one database to another (remember to update facility_id)
 
-
-/*extract rows from backup*/
+# extract rows from backup
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY ( select * from kolibriauth_facilityuser where id in () ) TO STDOUT WITH CSV HEADER " > ~/kolibriauth_facilityuser.csv
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY ( select * from logger_attemptlog where user_id in () ) TO STDOUT WITH CSV HEADER" > ~/logger_attemptlog.csv
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY ( select * from logger_contentsessionlog where user_id in () ) TO STDOUT WITH CSV HEADER" > ~/logger_contentsessionlog.csv
@@ -14,8 +12,7 @@ PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY ( select * from logger_masterylog where user_id in () ) TO STDOUT WITH CSV HEADER" > ~/logger_masterylog.csv
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY ( select * from logger_usersessionlog where user_id in () ) TO STDOUT WITH CSV HEADER" > ~/logger_usersessionlog.csv
 
-
-/*insert rows into live database*/
+# insert rows into live database
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY kolibriauth_facilityuser FROM '~/kolibriauth_facilityuser.csv' DELIMITER ',' CSV HEADER;"
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY logger_attemptlog FROM '~/logger_attemptlog.csv' DELIMITER ',' CSV HEADER;"
 PGPASSWORD=$KOLIBRI_DATABASE_PASSWORD psql -h $KOLIBRI_DATABASE_HOST -U $KOLIBRI_DATABASE_USER -d $KOLIBRI_DATABASE_NAME -c "COPY logger_contentsessionlog FROM '~/logger_contentsessionlog.csv' DELIMITER ',' CSV HEADER;"
