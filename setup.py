@@ -6,6 +6,7 @@ django.setup()
 from create_lessons import create_lessons  # noqa E402
 from create_quizzes import create_quizzes  # noqa E402
 from helpers import get_or_create_classroom # noqa E402
+from helpers import get_or_create_learnergroup
 
 # Create lessons and quizzes for the live learners cleass
 # The class will be created if it does not exist
