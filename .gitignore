@@ -3,3 +3,4 @@ sandbox.py
 *.csv
 .pytest_cache
 __pycache__
+*.sublime-project
