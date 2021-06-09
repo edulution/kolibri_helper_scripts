@@ -88,10 +88,10 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
 
             # If the user and classroom exist, create the membership
             if user_exists and classroom_exists:
-                user_obj = FacilityUser.objects.filter(
+                user_obj = FacilityUser.objects.get(
                 username=user["username"], facility_id=facility_id)
 
-                classroom_for_user = classroom_exists = Classroom.objects.filter(
+                classroom_for_user = classroom_exists = Classroom.objects.get(
                 name=user["grade"], parent_id = facility_id)
 
                 Membership.objects.create(user = user_obj, collection = classroom_for_user)
@@ -99,7 +99,7 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
                 # Print out a message confirming the membership has been created
                 print(
                     "Created Membership for user: {} in Classroom {}".format(
-                        str(user_obj.full_name), str(facility_obj.name)
+                        str(user_obj.full_name), str(classroom_for_user.name)
                     )
                 )
                 
