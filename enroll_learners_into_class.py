@@ -13,6 +13,9 @@ from kolibri.core.auth.models import (
     Facility,
     FacilityDataset,
     FacilityUser,
+    Classroom,
+    LearnerGroup,
+    Membership
 )  # noqa E402
 
 # Initalize argparse and define command line args that can be passed to this module
@@ -31,7 +34,7 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 
-def enroll_learners_into_class(input_file, facilityname=def_facility):
+def enroll_learners_into_class(input_file, facilityname=def_facility,delete_existing_memberships=True):
     """Function to enroll learners into classes using a csv file
     The file is expected to have columns user_id, centre, and grade. All other columns are ignored
     The grade column represents the name of the classroom the learner should be enrolled into.
@@ -62,6 +65,10 @@ def enroll_learners_into_class(input_file, facilityname=def_facility):
         print("Error: Facility with the name {} does not exist".format(facility))
         # exit in an error state
         sys.exit("Learners were not enrolled successfully. Check the error(s) above")
+
+    # Delete all existing memberships
+    if delete_existing_memberships:
+        Membership.objects.all().delete()
 
     # Use csv dictreader to get the contents of the file
     with open(input_file) as f:
