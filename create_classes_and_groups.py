@@ -12,6 +12,7 @@ from kolibri.core.auth.models import (
     Facility,
     FacilityDataset,
     FacilityUser,
+    Classroom
 )  # noqa E402
 
 
@@ -36,7 +37,7 @@ def_facility = str(Facility.get_default_facility().name)
 wanted_learnergroups = ["Level 1","Level 2","Level 3","Level 4","Level 5"]
 
 
-def create_classes_and_groups(input_file, facilityname=def_facility):
+def create_classes_and_groups(input_file, facilityname=def_facility,delete_existing_classrooms=True):
     """Function to created classrooms and groups inside each classroom based on a csv file
     The file is expected to have columns centre and grade. All other columns are ignored
     The grade column represents the names of the classrooms to create.
@@ -63,6 +64,11 @@ def create_classes_and_groups(input_file, facilityname=def_facility):
         print("Error: Facility with the name {} does not exist".format(facilityname))
         # exit in an error state
         sys.exit("Classrooms and Groups have not been created. Check the error(s) above")
+
+
+    # Delete all classrooms in the facility
+    if delete_existing_classrooms:
+        Classroom.objects.filter(parent_id = facility_id).delete()
 
     # Use csv dictreader to get the contents of the file
     with open(input_file) as f:
