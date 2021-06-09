@@ -383,6 +383,41 @@ def get_channels_in_module(modulename):
     return channels
 
 
+def get_channels_in_level(levelname):
+    """Function to get all channels with the level passed in
+    Uses channel_metadata table
+        Args:
+            levelname (string): The name of the level
+
+        Returns:
+            A list of ChannelMetadata objects
+    """
+
+    # Query to get all channels that have the level specified
+    channels_query = """select * from content_channelmetadata
+    where lower(name) like '{}%' order by name""".format(
+        modulename.lower()
+    )
+
+    # Use the query to get ChannelMetadata objects
+    # can't use django ORM __in method because it doesnt work on uuid data type
+    # Convert the rawquery to a list
+    channels = list(ChannelMetadata.objects.raw(channels_query))
+
+    # check that the channels for the passed in level exist
+    if len(channels) == 0:
+        # Raise a value error and exist the script if the list is empty
+        raise ValueError(
+            """No channels with the Level name {} were found.
+            Check that the expected channel(s) have been imported sucessfully""".format(
+                modulename
+            )
+        )
+        sys.exit()
+
+    # Return a list ChannelMetadata objects
+    return channels
+
 def get_admins_for_facility(facility):
     """Get a list of admins and coaches for a Facility
     Args:
