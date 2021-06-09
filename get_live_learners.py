@@ -86,7 +86,7 @@ def insert_live_learners_into_db(live_learners_arr):
         connection.commit()
 
         # Print the number of live learners that have been inserted into the table
-        print("%s live learner(s) found" % len(live_learners_arr))
+        print("%s users(s) currently logged in" % len(live_learners_arr))
 
     except (Exception, psycopg2.Error) as error:
         # catch any errors from the database and print them to the console
