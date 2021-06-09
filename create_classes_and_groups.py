@@ -4,7 +4,6 @@ import sys
 import uuid
 import csv
 import argparse
-from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 
 django.setup()
