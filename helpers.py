@@ -393,16 +393,10 @@ def get_channels_in_level(levelname):
             A list of ChannelMetadata objects
     """
 
-    # Query to get all channels that have the level specified
-    channels_query = """select * from content_channelmetadata
-    where lower(name) like '{}%' order by name""".format(
-        modulename.lower()
-    )
-
     # Use the query to get ChannelMetadata objects
     # can't use django ORM __in method because it doesnt work on uuid data type
     # Convert the rawquery to a list
-    channels = list(ChannelMetadata.objects.raw(channels_query))
+    channels = list(ChannelMetadata.objects.filter(name__contains = levelname))
 
     # check that the channels for the passed in level exist
     if len(channels) == 0:
@@ -410,7 +404,7 @@ def get_channels_in_level(levelname):
         raise ValueError(
             """No channels with the Level name {} were found.
             Check that the expected channel(s) have been imported sucessfully""".format(
-                modulename
+                levelname
             )
         )
         sys.exit()
