@@ -49,7 +49,7 @@ def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1",
 
     for level in levels:
         # get all channels with the module passed in
-        channels = get_channels_in_level(modulename)
+        channels = get_channels_in_level(level)
 
         # get a list of all the channel ids for the channels in the above query
         channel_ids = [channel.id for channel in channels]
