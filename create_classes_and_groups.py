@@ -49,9 +49,6 @@ def create_classes_and_groups(input_file, facilityname=def_facility):
         None
     """
 
-    # Initialize variable for number of users created
-    num_created = 0
-
     # Check if the Facility supplied exists
     try:
         # Attempt to get a reference to the Facility supplied if it exists
@@ -87,14 +84,6 @@ def create_classes_and_groups(input_file, facilityname=def_facility):
             # If the facility does not exist,  continue to the next iteration of the loop
             else:
                 continue
-
-    # Print out the total number of users that were created
-    if num_created == 0:
-        # If not learners were created, something is wrong and there will be errors displayed in the console
-        print("No learners were enrolled. Kindly check the errors above")
-    else:
-        print("{} user(s) were enrolled into their classes".format(num_created))
-
 
 # Main function called when script is run
 if __name__ == "__main__":
