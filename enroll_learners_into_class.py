@@ -80,7 +80,7 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
 
             user_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
-            ).exists() and user["centre"] == facility
+            ).exists() and user["centre"] == facilityname
 
             classroom_exists = Classroom.objects.filter(
                 name=user["grade"]
