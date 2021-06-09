@@ -3,18 +3,20 @@ import django
 
 django.setup()
 
-from create_lessons import create_lessons  # noqa E402
-from create_quizzes import create_quizzes  # noqa E402
-from helpers import get_or_create_classroom # noqa E402
+from kolibri.core.auth.models import Classroom
 
-# Create lessons and quizzes for the live learners cleass
-# The class will be created if it does not exist
-create_quizzes("numeracy", "Live Learners")
-create_lessons("numeracy", "Live Learners")
+from create_lessons_by_level import create_lessons_by_level
+from create_quizzes_by_level import create_quizzes_by_level
 
-# Create Learners on Program class if it does not exist
-get_or_create_classroom("Learners on Program")
+# Create classrooms first if needed
+# from helpers import get_or_create_classroom
+# get_or_create_classroom()
 
-# Create Zarchive class if it does not exist
-get_or_create_classroom("Zarchive")
+# Get a list of all of the existing classrooms
+classroom_names = [str(c) for c in Classroom.objects.all()]
+
+# Create lessons and Quizzes by level for each
+for classroom in classroom_names:
+	create_lessons_by_level(classroom)
+	create_quizzes_by_level(classroom)
 
