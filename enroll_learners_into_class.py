@@ -110,7 +110,7 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
 
     # Print out the total number of users that were created
     if num_enrolled == 0:
-        # If not learners were created, something is wrong and there will be errors displayed in the console
+        # If not learners were enrolled, something is wrong and there will be errors displayed in the console
         print("No learners were enrolled. Kindly check the errors above")
     else:
         print("{} user(s) were enrolled into their classes".format(num_enrolled))
