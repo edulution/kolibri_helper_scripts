@@ -20,7 +20,7 @@ from kolibri.core.lessons.models import Lesson, LessonAssignment  # noqa E402
 from kolibri.core.content.models import ContentNode, ChannelMetadata  # noqa E402
 
 
-def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1","Level 2","Level 3","Level 4","Level 5","Unknown"]):
+def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1","Level 2","Level 3","Level 4","Level 5"]):
     """Function to create 1  Lesson for each topic in each Channel for a specified Module, then assign them to a Classroom.
     The Classroom object is created if it does not exist.
 
