@@ -3,3 +3,4 @@ sandbox.py
 .pytest_cache
 __pycache__
 *.sublime-project
+*.sublime-workspace
