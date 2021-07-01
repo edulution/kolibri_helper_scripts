@@ -79,7 +79,7 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
         for user in users:
 
             user_exists = FacilityUser.objects.filter(
-                username=user["username"], facility_id=facility_id
+                id=user["user_id"], facility_id=facility_id
             ).exists() and user["centre"] == facilityname
 
             classroom_exists = Classroom.objects.filter(
@@ -89,7 +89,7 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
             # If the user and classroom exist, create the membership
             if user_exists and classroom_exists:
                 user_obj = FacilityUser.objects.get(
-                username=user["username"], facility_id=facility_id)
+                id=user["user_id"], facility_id=facility_id)
 
                 classroom_for_user = classroom_exists = Classroom.objects.get(
                 name=user["grade"], parent_id = facility_id)
