@@ -34,6 +34,10 @@ def create_quizzes_by_level(classroomname, facilityname=None,levels=["Level 1","
         None
     """
 
+    # Delete all lessons
+    Exam.objects.all().delete()
+    print("Deleting all existing Quizzes")
+
     # get a reference to the facility to create the lessons in
     facility_for_quizzes = get_facility_or_default(facilityname)
 
