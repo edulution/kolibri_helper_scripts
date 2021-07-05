@@ -33,10 +33,6 @@ def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1",
         None
     """
 
-    # Delete all lessons
-    Lesson.objects.all().delete()
-    print("Deleting all existing Lessons")
-
     # get a reference to the facility to create the lessons in
     facility_for_lessons = get_facility_or_default(facilityname)
 
