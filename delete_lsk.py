@@ -1,7 +1,7 @@
 import kolibri  # noqa F401
 import django
 
-
+ 
 django.setup()
 
 from kolibri.core.auth.models import *  # noqa E402
