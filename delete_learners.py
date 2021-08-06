@@ -69,9 +69,8 @@ def delete_users(input_file):
             print("Done! {} users were deleted".format(num_deleted))
         else:
             print(
-                "{} user(s) deleted but {} were supplied. Please check the errors above".format(
-                    num_deleted, len(to_delete)
-                )
+                "{} user(s) deleted but {} were supplied. Please check the errors above"
+                .format(num_deleted, len(to_delete))
             )
 
 
