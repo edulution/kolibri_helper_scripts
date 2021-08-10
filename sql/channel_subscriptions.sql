@@ -85,5 +85,6 @@ FOR classRow IN (SELECT *FROM kolibriauth_collection WHERE kind = 'classroom') L
 
 END LOOP;
 
+RAISE NOTICE 'Channel subscription complete';
 
 END$$;
