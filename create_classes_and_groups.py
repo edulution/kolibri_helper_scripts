@@ -37,7 +37,7 @@ def_facility = str(Facility.get_default_facility().name)
 wanted_learnergroups = ["Level 1","Level 2","Level 3","Level 4","Level 5"]
 
 
-def create_classes_and_groups(input_file, facilityname=def_facility,delete_existing_classrooms=True):
+def create_classes_and_groups(input_file, facilityname=def_facility,delete_existing_classrooms=False):
     """Function to created classrooms and groups inside each classroom based on a csv file
     The file is expected to have columns centre and grade. All other columns are ignored
     The grade column represents the names of the classrooms to create.
