@@ -438,3 +438,28 @@ def get_admins_for_facility(facility):
         sys.exit()
 
     return admins
+
+def update_facilityuser_details():
+
+
+    # ORM to retrieve all facility user daetails
+    facility_users = FacilityUser.objects.all()
+
+    # loop through the table to retieve user details
+    for user in facility_users:
+
+        # retrieved object to update and used function title() to update each of the objects to proper casing
+        user.full_name.title()
+
+        # save te changes to the database
+        user.save()
+
+        # ORM to retrieve retrieve update values
+        updated_facility_users = FacilityUser.objects.values_list('full_name', flat=True)
+
+        # loop through the table to retieve updated user details 
+        for updated_user in updated_facility_users:
+
+            # print updated user's full_name
+            print("full_name: {}".format(updated_user)
+            )
