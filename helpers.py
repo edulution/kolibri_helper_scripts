@@ -440,19 +440,32 @@ def get_admins_for_facility(facility):
     return admins
 
 def update_facilityuser_details():
+    """Function to update learner full_name in FacilityUser to title casing
+    args:
+        Function does not implment any arguments at implementation
+    """
     
     # ORM to retrieve all facility user daetails
     facility_users = FacilityUser.objects.all()
 
-    # loop through the table to retieve user details
+   # initialiser for total number of learners created
+    num_learners_updated = 0
+
+    # loop to return facilityuser details referenced from ORM preceeding 
     for user in facility_users:
 
-        # retrieved object to update and used function title() to update each of the objects to proper casing in this case full_name
+        # full_name object called from loop and assigned action on object to update to title casing
         user.full_name =  user.full_name.title()
         
         # saving changes to the database
         user.save()
 
         # print updated user's full_name
-        print("full_name: {}".format(user)
+        print("Updated Name: {}".format(str(user.full_name))
         )
+
+        # implement an increment to num_learners_updated
+        num_learners_updated += 1
+        
+    # updated named printed at the end of exection 
+    print("\n{} have been updated to Title casing".format(str(num_learners_updated)))
