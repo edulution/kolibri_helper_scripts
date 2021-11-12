@@ -12,7 +12,7 @@ from kolibri.core.auth.models import (
     Facility,
     FacilityDataset,
     FacilityUser,
-    Classroom
+    Classroom,
 )  # noqa E402
 
 
@@ -34,10 +34,12 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 # List of the LearnerGroups we want to create in each class
-wanted_learnergroups = ["Level 1","Level 2","Level 3","Level 4","Level 5"]
+wanted_learnergroups = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
 
 
-def create_classes_and_groups(input_file, facilityname=def_facility,delete_existing_classrooms=True):
+def create_classes_and_groups(
+    input_file, facilityname=def_facility, delete_existing_classrooms=True
+):
     """Function to created classrooms and groups inside each classroom based on a csv file
     The file is expected to have columns centre and grade. All other columns are ignored
     The grade column represents the names of the classrooms to create.
@@ -63,12 +65,13 @@ def create_classes_and_groups(input_file, facilityname=def_facility,delete_exist
         # Print out the name of the Facility that does not exist and terminate the script
         print("Error: Facility with the name {} does not exist".format(facilityname))
         # exit in an error state
-        sys.exit("Classrooms and Groups have not been created. Check the error(s) above")
-
+        sys.exit(
+            "Classrooms and Groups have not been created. Check the error(s) above"
+        )
 
     # Delete all classrooms in the facility
     if delete_existing_classrooms:
-        Classroom.objects.filter(parent_id = facility_id).delete()
+        Classroom.objects.filter(parent_id=facility_id).delete()
 
     # Use csv dictreader to get the contents of the file
     with open(input_file) as f:
@@ -82,14 +85,19 @@ def create_classes_and_groups(input_file, facilityname=def_facility,delete_exist
 
             # If the facility exists, create the classroom specified in the grade column
             if facility_exists:
-                classroom_to_create = get_or_create_classroom(row["grade"], facilityname)
+                classroom_to_create = get_or_create_classroom(
+                    row["grade"], facilityname
+                )
                 # in the classroom that has just been created, create all of the wanted learnergroups
                 for learnergroup in wanted_learnergroups:
-                    get_or_create_learnergroup(learnergroup, classroom_to_create.name, facilityname)
-                
+                    get_or_create_learnergroup(
+                        learnergroup, classroom_to_create.name, facilityname
+                    )
+
             # If the facility does not exist,  continue to the next iteration of the loop
             else:
                 continue
+
 
 # Main function called when script is run
 if __name__ == "__main__":
