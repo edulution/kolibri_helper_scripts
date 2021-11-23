@@ -15,7 +15,7 @@ from kolibri.core.auth.models import (
     FacilityUser,
     Classroom,
     LearnerGroup,
-    Membership
+    Membership,
 )  # noqa E402
 
 # Initalize argparse and define command line args that can be passed to this module
@@ -34,7 +34,9 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 
-def enroll_learners_into_class(input_file, facilityname=def_facility,delete_existing_memberships=True):
+def enroll_learners_into_class(
+    input_file, facilityname=def_facility, delete_existing_memberships=True
+):
     """Function to enroll learners into classes using a csv file
     The file is expected to have columns user_id, centre, and grade. All other columns are ignored
     The grade column represents the name of the classroom the learner should be enrolled into.
@@ -78,23 +80,26 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
         # Loop through the list of users read from the input file
         for user in users:
 
-            user_exists = FacilityUser.objects.filter(
-                id=user["user_id"], facility_id=facility_id
-            ).exists() and user["centre"] == facilityname
-
-            classroom_exists = Classroom.objects.filter(
-                name=user["grade"]
+            user_exists = (
+                FacilityUser.objects.filter(
+                    id=user["user_id"], facility_id=facility_id
                 ).exists()
+                and user["centre"] == facilityname
+            )
+
+            classroom_exists = Classroom.objects.filter(name=user["grade"]).exists()
 
             # If the user and classroom exist, create the membership
             if user_exists and classroom_exists:
                 user_obj = FacilityUser.objects.get(
-                id=user["user_id"], facility_id=facility_id)
+                    id=user["user_id"], facility_id=facility_id
+                )
 
                 classroom_for_user = classroom_exists = Classroom.objects.get(
-                name=user["grade"], parent_id = facility_id)
+                    name=user["grade"], parent_id=facility_id
+                )
 
-                Membership.objects.create(user = user_obj, collection = classroom_for_user)
+                Membership.objects.create(user=user_obj, collection=classroom_for_user)
 
                 # Print out a message confirming the membership has been created
                 print(
@@ -102,7 +107,7 @@ def enroll_learners_into_class(input_file, facilityname=def_facility,delete_exis
                         str(user_obj.full_name), str(classroom_for_user.name)
                     )
                 )
-                
+
                 num_enrolled += 1
             # If the user and classroom do not exist, skip to the next iteration of the loop
             else:
