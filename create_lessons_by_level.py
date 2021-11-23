@@ -20,7 +20,11 @@ from kolibri.core.lessons.models import Lesson, LessonAssignment  # noqa E402
 from kolibri.core.content.models import ContentNode, ChannelMetadata  # noqa E402
 
 
-def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1","Level 2","Level 3","Level 4","Level 5"]):
+def create_lessons_by_level(
+    classroomname,
+    facilityname=None,
+    levels=["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
+):
     """Function to create 1  Lesson for each topic in each Channel for a specified Module, then assign them to a Classroom.
     The Classroom object is created if it does not exist.
 
@@ -45,7 +49,6 @@ def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1",
     # get a list of the admin and coach accounts on the device
     # use raw query because __in ORM method doesn't work with uuid data type
     admin_for_lessons = get_admins_for_facility(facility_for_lessons)[0]
-
 
     for level in levels:
         # get all channels with the module passed in
@@ -74,7 +77,9 @@ def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1",
             for topic_id in topic_ids:
                 # create the title for the lesson using the  title of the topic + the channel name
                 lesson_title = (
-                    str(ContentNode.objects.get(id=topic_id).title) + " - " + channel_name
+                    str(ContentNode.objects.get(id=topic_id).title)
+                    + " - "
+                    + channel_name
                 )
 
                 # lesson titles have a constraint of 50 characters
@@ -119,7 +124,9 @@ def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1",
                 ]
 
                 # set the morango partition the lesson
-                lesson_for_topic._morango_partition = lesson_for_topic.calculate_partition()
+                lesson_for_topic._morango_partition = (
+                    lesson_for_topic.calculate_partition()
+                )
 
                 # inform the user that the lesson has been created
                 print(
@@ -152,8 +159,3 @@ def create_lessons_by_level(classroomname, facilityname=None, levels=["Level 1",
 
                 # save the lesson object
                 lesson_for_topic.save()
-
-
-    
-
-    
