@@ -20,7 +20,7 @@ argParser.add_argument(
 
 def delete_users(input_file):
     """Function to delete users supplied in a csv file
-    The csv file is expected to have a column id (uuid of each user to be deleted)
+    The csv file is expected to have a column user_id (uuid of each user to be deleted)
 
     Args:
         input_file (string): Path to the file containig the ids of users to delete
