@@ -396,7 +396,7 @@ def get_channels_in_level(levelname):
     # Use the query to get ChannelMetadata objects
     # can't use django ORM __in method because it doesnt work on uuid data type
     # Convert the rawquery to a list
-    channels = list(ChannelMetadata.objects.filter(name__contains = levelname))
+    channels = list(ChannelMetadata.objects.filter(name__contains=levelname))
 
     # check that the channels for the passed in level exist
     if len(channels) == 0:
@@ -411,6 +411,7 @@ def get_channels_in_level(levelname):
 
     # Return a list ChannelMetadata objects
     return channels
+
 
 def get_admins_for_facility(facility):
     """Get a list of admins and coaches for a Facility
@@ -438,3 +439,37 @@ def get_admins_for_facility(facility):
         sys.exit()
 
     return admins
+
+
+def titlecase_fullnames():
+    """Update the full_names of all FacilityUsers to title casing
+    Args:
+        None
+
+    Returns:
+        None
+    """
+
+    # ORM to retrieve all facility user objects
+    facility_users = FacilityUser.objects.all()
+
+    # initialiser for total number of learners updated
+    num_learners_updated = 0
+
+    # loop to return facilityuser objects referenced from ORM preceeding
+    for user in facility_users:
+
+        # full_name object called from loop and assigned action on object to update to title casing
+        user.full_name = user.full_name.title()
+
+        # saving changes to the database
+        user.save()
+
+        # print updated user's full_name
+        print("Updated Name: {}".format(str(user.full_name)))
+
+        # implement an increment to num_learners_updated
+        num_learners_updated += 1
+
+    # Number of updated users printed at the end of exection
+    print("\n{} have been updated to Title casing".format(str(num_learners_updated)))

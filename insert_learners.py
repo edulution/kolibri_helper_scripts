@@ -33,7 +33,7 @@ def_facility = str(Facility.get_default_facility().name)
 def insert_users(input_file, facility=def_facility):
     """Insert users into a Facility from a csv file.
     Fields expected in the csv file:
-        id
+        user_id
         full_name
         username
     Generally used to recreate users that already existed before without generating new user_ids
@@ -65,10 +65,10 @@ def insert_users(input_file, facility=def_facility):
 
         for user in users:
             _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
-                dataset_id=dataset_id, user_id=user["id"]
+                dataset_id=dataset_id, user_id=user["user_id"]
             )
             FacilityUser.objects.create(
-                id=user["id"],
+                id=user["user_id"],
                 full_name=user["full_name"],
                 username=user["username"],
                 password=make_password(user["username"]),

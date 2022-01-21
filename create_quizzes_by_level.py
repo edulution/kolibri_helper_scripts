@@ -20,7 +20,11 @@ from kolibri.core.content.models import ContentNode, ChannelMetadata  # noqa E40
 from le_utils.constants import content_kinds  # noqa E402
 
 
-def create_quizzes_by_level(classroomname, facilityname=None,levels=["Level 1","Level 2","Level 3","Level 4","Level 5"]):
+def create_quizzes_by_level(
+    classroomname,
+    facilityname=None,
+    levels=["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
+):
     """Function that creates 1 quiz for each topic in each channel having the module passed in
     each quiz contains 10 questions
     e.g create_quizzes('numeracy','a1') will create 1 quiz for each topic in each numeracy channel
@@ -74,7 +78,9 @@ def create_quizzes_by_level(classroomname, facilityname=None,levels=["Level 1","
             for topic_id in topic_ids:
                 # create the title for the Quiz using the  title of the topic + the channel name
                 quiz_title = (
-                    str(ContentNode.objects.get(id=topic_id).title) + " - " + channel_name
+                    str(ContentNode.objects.get(id=topic_id).title)
+                    + " - "
+                    + channel_name
                 )
 
                 # Quiz titles have a constraint of 50 characters
@@ -180,6 +186,3 @@ def create_quizzes_by_level(classroomname, facilityname=None,levels=["Level 1","
                             str(new_quiz.title), str(group_for_quiz.name)
                         )
                     )
-
-
-
