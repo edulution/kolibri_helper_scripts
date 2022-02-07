@@ -25,8 +25,7 @@ python -m kolibri manage setchannelposition a5cd9f9f-000e-4145-9a95-875d7dfd3e68
 python -m kolibri manage setchannelposition 6c408923-2a72-447e-abbd-f83b7c5612a4 19 # Level 5 Section 3
 python -m kolibri manage setchannelposition 28f4920a-7b44-4e29-af4f-1e8d00ca332b 20 # Level 5 Section 4
 python -m kolibri manage setchannelposition 8d368058-6565-44e2-b7fe-62eb2a632698 21 # Grade 7 Numeracy (Zambia)
-python -m kolibri manage setchannelposition 96578ffc-06e4-4a46-b021-540cb217f9c9 22 # Grade 7 Literacy (Zambia)
-python -m kolibri manage setchannelposition 19ea4c94-ee48-4cb0-b5bb-617f5511f4c1 23 #Coach Professional Development
+python -m kolibri manage setchannelposition 19ea4c94-ee48-4cb0-b5bb-617f5511f4c1 22 #Coach Professional Development
 
 
 echo "Successfully reordered channels"
