@@ -38,6 +38,7 @@ def create_quizzes_by_level(
         None
     """
 
+
     # get a reference to the facility to create the lessons in
     facility_for_quizzes = get_facility_or_default(facilityname)
 
