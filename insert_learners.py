@@ -71,7 +71,19 @@ def insert_users(input_file, facility=def_facility):
             user_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
             ).exists()
-            if user_exists:
+            user_id_exists = FacilityUser.objects.filter(
+                id=user["user_id"], facility_id=facility_id
+            ).exists()
+            if user_id_exists:
+                # if a user with the same user_id already exists in the facility
+                # raise a value error and terminate the script
+                raise ValueError(
+                    "Duplicate user ID. There is already a user with ID {}".format(
+                        user["user_id"]
+                    )
+                )
+                sys.exit()
+            elif user_exists:
                 # if a user with the same username already exists in the facility
                 # raise a value error and terminate the script
                 raise ValueError(

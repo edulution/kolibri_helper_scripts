@@ -27,7 +27,11 @@ argParser.add_argument(
     "-c",
     help="Name of Facility( centre_id) in the case of multiple facilities on 1 device",
 )
-
+argParser.add_argument(
+    "--delete",
+    "-d",
+    help="Delete all existing memberships. The default value is False",
+)
 
 # Get the name of the default facility on the device
 # used as the default value in case facility is not passed in
@@ -35,7 +39,7 @@ def_facility = str(Facility.get_default_facility().name)
 
 
 def enroll_learners_into_class(
-    input_file, facilityname=def_facility, delete_existing_memberships=True
+    input_file, facilityname=def_facility, delete_existing_memberships=False
 ):
     """Function to enroll learners into classes using a csv file
     The file is expected to have columns user_id, centre, and grade. All other columns are ignored
@@ -126,7 +130,7 @@ if __name__ == "__main__":
     args = argParser.parse_args()
     # If the file is supplied and facility is not supplied
     # Enroll learners into classes based on the defualt facility
-    if args.file and not (args.centre):
+    if args.file and not (args.centre or args.delete):
         open_file = args.file
         enroll_learners_into_class(open_file)
 
@@ -136,6 +140,41 @@ if __name__ == "__main__":
         facility = args.centre
         open_file = args.file
         enroll_learners_into_class(open_file, facility)
+
+    # If the file and the delete existing membership are supplied
+    # Enroll learners into classes based on the supplied
+    elif args.file and args.delete:
+
+        # convert provided option to lowercase
+        if args.delete.lower() == "true":
+            open_file = args.file
+            enroll_learners_into_class(open_file, delete_existing_memberships=True)
+        elif args.delete.lower() == "false":
+            open_file = args.file
+            enroll_learners_into_class(open_file)
+        else:
+            print(
+                'Error: value "{}" is incorrect for the optional arguement "Delete existing memberships". Type either True or False'.format(
+                    args.delete
+                )
+            )
+    elif args.file and args.delete and args.centre:
+        if args.delete.lower() == "true":
+            open_file = args.file
+            facility = args.centre
+            enroll_learners_into_class(
+                open_file, facility, delete_existing_memberships=True
+            )
+        elif args.delete.lower() == "false":
+            open_file = args.file
+            facility = args.centre
+            enroll_learners_into_class(open_file, facility)
+        else:
+            print(
+                'Error: value "{}" is incorrect for the optional arguement "Delete existing memberships". Type either True or False'.format(
+                    args.delete
+                )
+            )
 
     # If neither the file nor the facility are passed in, stop the script in an error state
     else:
