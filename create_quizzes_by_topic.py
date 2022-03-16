@@ -20,7 +20,7 @@ from kolibri.core.content.models import ContentNode, ChannelMetadata  # noqa E40
 from le_utils.constants import content_kinds  # noqa E402
 
 
-def create_quizzes_by_level(
+def create_quizzes_by_topic(
     classroomname,
     facilityname=None,
     levels=["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
@@ -37,7 +37,6 @@ def create_quizzes_by_level(
     Returns:
         None
     """
-
 
     # get a reference to the facility to create the lessons in
     facility_for_quizzes = get_facility_or_default(facilityname)
