@@ -20,7 +20,7 @@ from kolibri.core.lessons.models import Lesson, LessonAssignment  # noqa E402
 from kolibri.core.content.models import ContentNode, ChannelMetadata  # noqa E402
 
 
-def create_lessons_by_level(
+def create_lessons_by_topic(
     classroomname,
     facilityname=None,
     levels=["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
