@@ -30,6 +30,8 @@ argParser.add_argument(
 argParser.add_argument(
     "--delete",
     "-d",
+    action="store_true", 
+    default=False,
     help="Delete all existing memberships. The default value is False",
 )
 
@@ -145,39 +147,19 @@ if __name__ == "__main__":
     # Enroll learners into classes based on the supplied
     elif args.file and args.delete:
 
-        # convert provided option to lowercase
-        if args.delete.lower() == "true":
-            open_file = args.file
-            enroll_learners_into_class(open_file, delete_existing_memberships=True)
-        elif args.delete.lower() == "false":
-            open_file = args.file
-            enroll_learners_into_class(open_file)
-        else:
-            print(
-                'Error: value "{}" is incorrect for the optional arguement "Delete existing memberships". Type either True or False'.format(
-                    args.delete
-                )
-            )
-    elif args.file and args.delete and args.centre:
-        if args.delete.lower() == "true":
-            open_file = args.file
-            facility = args.centre
-            enroll_learners_into_class(
-                open_file, facility, delete_existing_memberships=True
-            )
-        elif args.delete.lower() == "false":
-            open_file = args.file
-            facility = args.centre
-            enroll_learners_into_class(open_file, facility)
-        else:
-            print(
-                'Error: value "{}" is incorrect for the optional arguement "Delete existing memberships". Type either True or False'.format(
-                    args.delete
-                )
-            )
+        # convert provided option to lowercase        
+        open_file = args.file
+        enroll_learners_into_class(open_file, delete_existing_memberships=True)
+        
+    elif args.file and args.delete and args.centre:        
+        open_file = args.file
+        facility = args.centre
+        enroll_learners_into_class(
+            open_file, facility, delete_existing_memberships=True
+        )
 
     # If neither the file nor the facility are passed in, stop the script in an error state
     else:
         sys.exit(
-            "No arguments passed in. Please pass in the path to the file and centre_id (optional)"
+            "No arguments passed in. Please pass in the path to the file, centre_id (optional) and delete_existing_memberships(optional)"
         )
