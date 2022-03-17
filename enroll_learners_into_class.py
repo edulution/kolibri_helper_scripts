@@ -30,7 +30,7 @@ argParser.add_argument(
 argParser.add_argument(
     "--delete",
     "-d",
-    action="store_true", 
+    action="store_true",
     default=False,
     help="Delete all existing memberships. The default value is False",
 )
@@ -132,30 +132,17 @@ if __name__ == "__main__":
     args = argParser.parse_args()
     # If the file is supplied and facility is not supplied
     # Enroll learners into classes based on the defualt facility
-    if args.file and not (args.centre or args.delete):
+    if args.file and not (args.centre):
         open_file = args.file
-        enroll_learners_into_class(open_file)
+        enroll_learners_into_class(open_file, delete_existing_memberships=args.delete)
 
     # If both the file and the facility are supplied
     # Enroll learners into classes based on the supplied
     elif args.file and args.centre:
-        facility = args.centre
-        open_file = args.file
-        enroll_learners_into_class(open_file, facility)
-
-    # If the file and the delete existing membership are supplied
-    # Enroll learners into classes based on the supplied
-    elif args.file and args.delete:
-
-        # convert provided option to lowercase        
-        open_file = args.file
-        enroll_learners_into_class(open_file, delete_existing_memberships=True)
-        
-    elif args.file and args.delete and args.centre:        
         open_file = args.file
         facility = args.centre
         enroll_learners_into_class(
-            open_file, facility, delete_existing_memberships=True
+            open_file, facility, delete_existing_memberships=args.delete
         )
 
     # If neither the file nor the facility are passed in, stop the script in an error state
