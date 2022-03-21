@@ -112,29 +112,17 @@ if __name__ == "__main__":
     args = argParser.parse_args()
     # If the file is supplied and facility is not supplied
     # Create the classrooms and learnergroups in the default facility
-    if args.file and not (args.centre or args.delete):
+    if args.file and not (args.centre):
         open_file = args.file
-        create_classes_and_groups(open_file)
+        create_classes_and_groups(open_file,delete_existing_classrooms=args.delete)
 
     # If both the file and the facility are supplied
     # Create the classrooms and learnergroups based on the facility supplied
     elif args.file and args.centre:
         facility = args.centre
         open_file = args.file
-        create_classes_and_groups(open_file, facility)
+        create_classes_and_groups(open_file, facility, delete_existing_classrooms=args.delete)
 
-    # If the file and the delete existing classrooms are supplied
-    # Create the classrooms and learnergroups based on the facility supplied
-    elif args.file and args.delete:
-        open_file = args.file
-        create_classes_and_groups(open_file, delete_existing_classrooms=True)
-    elif args.file and args.delete and args.centre:
-        open_file = args.file
-        facility = args.centre
-        create_classes_and_groups(
-            open_file, facility, delete_existing_classrooms=True
-        )
-        
     # If neither the file nor the facility are passed in, stop the script in an error state
     else:
         sys.exit(
