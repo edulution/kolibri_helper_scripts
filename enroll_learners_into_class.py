@@ -27,7 +27,13 @@ argParser.add_argument(
     "-c",
     help="Name of Facility( centre_id) in the case of multiple facilities on 1 device",
 )
-
+argParser.add_argument(
+    "--delete",
+    "-d",
+    action="store_true",
+    default=False,
+    help="Delete all existing memberships. The default value is False",
+)
 
 # Get the name of the default facility on the device
 # used as the default value in case facility is not passed in
@@ -35,7 +41,7 @@ def_facility = str(Facility.get_default_facility().name)
 
 
 def enroll_learners_into_class(
-    input_file, facilityname=def_facility, delete_existing_memberships=True
+    input_file, facilityname=def_facility, delete_existing_memberships=False
 ):
     """Function to enroll learners into classes using a csv file
     The file is expected to have columns user_id, centre, and grade. All other columns are ignored
@@ -128,17 +134,19 @@ if __name__ == "__main__":
     # Enroll learners into classes based on the defualt facility
     if args.file and not (args.centre):
         open_file = args.file
-        enroll_learners_into_class(open_file)
+        enroll_learners_into_class(open_file, delete_existing_memberships=args.delete)
 
     # If both the file and the facility are supplied
     # Enroll learners into classes based on the supplied
     elif args.file and args.centre:
-        facility = args.centre
         open_file = args.file
-        enroll_learners_into_class(open_file, facility)
+        facility = args.centre
+        enroll_learners_into_class(
+            open_file, facility, delete_existing_memberships=args.delete
+        )
 
     # If neither the file nor the facility are passed in, stop the script in an error state
     else:
         sys.exit(
-            "No arguments passed in. Please pass in the path to the file and centre_id (optional)"
+            "No arguments passed in. Please pass in the path to the file, centre_id (optional) and delete_existing_memberships(optional)"
         )

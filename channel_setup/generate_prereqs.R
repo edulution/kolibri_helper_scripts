@@ -18,13 +18,13 @@ kol_pool <- dbPool(
 
 # get channel metadata
 channel_meta <- kol_pool %>%
-  tbl("content_channelmetadata") %>%
-  collect()
+  dplyr::tbl("content_channelmetadata") %>%
+  dplyr::collect()
 
 # get contentnodes
 contentnodes <- kol_pool %>%
-  tbl("content_contentnode") %>%
-  collect()
+  dplyr::tbl("content_contentnode") %>%
+  dplyr::collect()
 
 # function to generate pairs of prerequisites by channel
 generate_prereqs_by_channel <- function(channel) {
@@ -32,9 +32,9 @@ generate_prereqs_by_channel <- function(channel) {
   # order by lft
   # get the ids as an atomic vector
   nodes_sort_order <- contentnodes %>%
-    filter(channel_id == channel, kind != "topic", parent_id != channel_id) %>%
-    arrange(lft) %>%
-    pull(id)
+    dplyr::filter(channel_id == channel, kind != "topic", parent_id != channel_id) %>%
+    dplyr::arrange(lft) %>%
+    dplyr::pull(id)
   # derive vectors of to_contentnode_id and from_contentnode_id using lead and lag
   to_c <- lag(nodes_sort_order)
   from_c <- lead(nodes_sort_order)
@@ -55,14 +55,14 @@ coach_content <- c("2c8cd5f3-a469-4adb-b4be-45025d9ca3dc", "19ea4c94-ee48-4cb0-b
 
 # get wanted channel ids as atomic vector
 channel_ids <- channel_meta %>%
-  filter(!id %in% coach_content) %>%
-  pull(id)
+  dplyr::filter(!id %in% coach_content) %>%
+  dplyr::pull(id)
 
 # Walk through the wanted channel_ids and generate the prerequisites
 # Bind all of the results into a single dataframe
 all_prereqs <- channel_ids %>%
-  map(generate_prereqs_by_channel) %>%
-  map_dfr(rbind)
+  purrr::map(generate_prereqs_by_channel) %>%
+  purrr::map_dfr(rbind)
 
 # delete all existing prerequisites
 dbGetQuery(kol_pool, "delete from content_contentnode_has_prerequisite")
