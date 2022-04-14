@@ -4,6 +4,7 @@ import sys
 import uuid
 import csv
 import argparse
+from colors import *
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -58,7 +59,10 @@ def create_users(input_file, facility=def_facility):
     # Catch the exception when the Facility does not exist
     except ObjectDoesNotExist:
         # Print out the name of the Facility that does not exist and terminate the script
-        print("Error: Facility with the name {} does not exist".format(facility))
+        print_colored(
+            "Error: Facility with the name {} does not exist".format(facility),
+            colors.fg.red,
+        )
         # exit in an error state
         sys.exit("Learners were not created successfully. Check the error(s) above")
 
@@ -77,8 +81,11 @@ def create_users(input_file, facility=def_facility):
                 # if a user with the same username already exists in the facility
                 # raise a value error and terminate the script
                 raise ValueError(
-                    "Duplicate username. There is already a user called {}".format(
-                        user["username"]
+                    print_colored(
+                        "Duplicate username. There is already a user called {}".format(
+                            user["username"],
+                            colors.fg.red,
+                        )
                     )
                 )
                 sys.exit()
@@ -105,10 +112,11 @@ def create_users(input_file, facility=def_facility):
                 )
 
                 # Print out the full name of the user that has been created
-                print(
+                print_colored(
                     "Created user: {} in Facility {}".format(
                         user["full_name"], str(facility_obj.name)
-                    )
+                    ),
+                    colors.fg.yellow,
                 )
 
                 # Increment the number of users created by one
@@ -117,9 +125,15 @@ def create_users(input_file, facility=def_facility):
     # Print out the total number of users that were created
     if num_created == 0:
         # If not learners were created, something is wrong and there will be errors displayed in the console
-        print("No learners were created. Kindly check the errors above")
+        print_colored(
+            "No learners were created. Kindly check the errors above",
+            colors.fg.red,
+        )
     else:
-        print("{} user(s) were created".format(num_created))
+        print_colored(
+            "{} user(s) were created".format(num_created),
+            colors.fg.lightgreen,
+        )
 
 
 # Main function called when script is run

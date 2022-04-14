@@ -1,8 +1,8 @@
 import kolibri  # noqa F401
 import django
-
 import uuid
 import random
+from colors import *
 from helpers import (
     get_facility_or_default,
     get_or_create_classroom,
@@ -131,8 +131,11 @@ def create_quizzes(modulename, classroomname, facilityname=None):
 
             # If there werent enough items to make a quiz, inform the user
             if len(quiz_content) == 0:
-                print "Could not cerate quiz {}. Not enough content".format(
-                    str(quiz_title)
+                print(
+                    "Could not cerate quiz {}. Not enough content".format(
+                        str(quiz_title)
+                    ),
+                    colors.fg.red,
                 )
 
             else:
@@ -151,11 +154,12 @@ def create_quizzes(modulename, classroomname, facilityname=None):
 
                 # Inform the user that the new quiz has been generated in the class
                 # Print('Quiz {} created in class {}'.format(str(new_quiz.title), str(class_for_quizzes.name)))
-                print (
+                print_colored(
                     "Quiz {} created in class {} with {} content items".format(
                         str(new_quiz.title),
                         str(class_for_quizzes.name),
                         str(n_content_items),
+                        colors.fg.yellow,
                     )
                 )
 
@@ -172,8 +176,10 @@ def create_quizzes(modulename, classroomname, facilityname=None):
                 )
 
                 # inform the user that the quiz has been assigned successfully
-                print (
+                print_colored(
                     "Quiz {} assigned to group {}".format(
-                        str(new_quiz.title), str(group_for_quiz.name)
+                        str(new_quiz.title),
+                        str(group_for_quiz.name),
+                        colors.fg.green,
                     )
                 )

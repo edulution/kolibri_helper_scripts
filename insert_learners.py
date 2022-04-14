@@ -5,6 +5,7 @@ import sys
 import uuid
 import csv
 import argparse
+from colors import *
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -79,7 +80,8 @@ def insert_users(input_file, facility=def_facility):
                 # raise a value error and terminate the script
                 raise ValueError(
                     "Duplicate user ID. There is already a user with ID {}".format(
-                        user["user_id"]
+                        user["user_id"],
+                        colors.fg.red,
                     )
                 )
                 sys.exit()
@@ -88,7 +90,8 @@ def insert_users(input_file, facility=def_facility):
                 # raise a value error and terminate the script
                 raise ValueError(
                     "Duplicate username. There is already a user called {}".format(
-                        user["username"]
+                        user["username"],
+                        colors.fg.red,
                     )
                 )
                 sys.exit()
@@ -116,9 +119,15 @@ def insert_users(input_file, facility=def_facility):
         # Print out the total number of users that were inserted
         if num_inserted == 0:
             # If not learners were inserted, something is wrong and there will be errors displayed in the console
-            print("No learners were inserted. Kindly check the errors above")
+            print_colored(
+                "No learners were inserted. Kindly check the errors above",
+                colors.fg.red,
+            )
         else:
-            print("{} user(s) were inserted".format(num_inserted))
+            print_colored(
+                "{} user(s) were inserted".format(num_inserted),
+                colors.fg.green,
+            )
 
 
 if __name__ == "__main__":
