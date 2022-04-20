@@ -83,9 +83,9 @@ def create_users(input_file, facility=def_facility):
                 raise ValueError(
                     print_colored(
                         "Duplicate username. There is already a user called {}".format(
-                            user["username"],
-                            colors.fg.red,
-                        )
+                            user["username"]
+                        ),
+                        colors.fg.red,
                     )
                 )
                 sys.exit()

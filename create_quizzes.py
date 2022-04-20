@@ -131,7 +131,7 @@ def create_quizzes(modulename, classroomname, facilityname=None):
 
             # If there werent enough items to make a quiz, inform the user
             if len(quiz_content) == 0:
-                print(
+                print_colored(
                     "Could not cerate quiz {}. Not enough content".format(
                         str(quiz_title)
                     ),
@@ -159,8 +159,8 @@ def create_quizzes(modulename, classroomname, facilityname=None):
                         str(new_quiz.title),
                         str(class_for_quizzes.name),
                         str(n_content_items),
-                        colors.fg.yellow,
-                    )
+                    ),
+                    colors.fg.lightblue,
                 )
 
                 # get or create a group to assign the quiz to based on the channel name
@@ -180,6 +180,6 @@ def create_quizzes(modulename, classroomname, facilityname=None):
                     "Quiz {} assigned to group {}".format(
                         str(new_quiz.title),
                         str(group_for_quiz.name),
-                        colors.fg.green,
-                    )
+                    ),
+                    colors.fg.lightblue,
                 )

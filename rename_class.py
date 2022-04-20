@@ -26,7 +26,8 @@ def rename_class(old_name, new_name):
         Classroom.objects.get(name=old_name)
     except ObjectDoesNotExist:
         print_colored(
-            "A classroom with the name {} was not found".format(old_name), colors.fg.red
+            "A classroom with the name {} was not found".format(old_name),
+            colors.fg.red,
         )
         sys.exit("The Classroom was not renamed. Please check the error(s) above")
 
@@ -41,7 +42,7 @@ def rename_class(old_name, new_name):
     # print a message to the console to indicate that it was successful
     print_colored(
         "Done! Class {} was renamed to {}".format(old_name, new_name),
-        colors.fg.green,
+        colors.fg.lightgreen,
     )
 
 

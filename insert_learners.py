@@ -112,7 +112,10 @@ def insert_users(input_file, facility=def_facility):
                     _morango_partition=_morango_partition,
                     _morango_source_id=uuid.uuid4(),
                 )
-                print("Created user: {}".format(user["full_name"]))
+                print_colored(
+                    "Created user: {}".format(user["full_name"]),
+                    colors.fg.yellow,
+                )
             # Increment num_inserted by 1
             num_inserted += 1
 
@@ -126,7 +129,7 @@ def insert_users(input_file, facility=def_facility):
         else:
             print_colored(
                 "{} user(s) were inserted".format(num_inserted),
-                colors.fg.green,
+                colors.fg.lightgreen,
             )
 
 

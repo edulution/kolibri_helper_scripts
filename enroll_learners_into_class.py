@@ -124,10 +124,11 @@ def enroll_learners_into_class(
 
             # If the delete flag is supplied, delete all existing memberships for the user
             if delete_existing_memberships:
-                print(
+                print_colored(
                     "Deleting Memberships for user: {}....".format(
                         str(user_obj.full_name)
-                    )
+                    ),
+                    colors.fg.yellow,
                 )
                 Membership.objects.filter(user_id=user_obj.id).delete()
 
@@ -156,19 +157,19 @@ def enroll_learners_into_class(
         # If not learners were enrolled, something is wrong and there will be errors displayed in the console
         print_colored(
             "No learners were enrolled. Kindly check the errors/messages above",
-            colors.fg.yellow,
+            colors.fg.red,
         )
     elif num_enrolled != len(users):
         print_colored(
             "{} user(s) were enrolled into their classes. Some learners were not enrolled successfully or were skipped. Kindly check the errors/messages above".format(
                 num_enrolled
             ),
-            colors.fg.yellow,
+            colors.fg.lightcyan,
         )
     else:
         print_colored(
             "{} user(s) were enrolled into their classes".format(num_enrolled),
-            colors.fg.green,
+            colors.fg.lightgreen,
         )
 
 

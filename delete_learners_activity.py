@@ -3,6 +3,7 @@ import django
 
 import time
 import csv
+from colors import *
 import argparse
 import sys
 
@@ -25,13 +26,34 @@ def warning(message, timer):
     """
 
     cancel = "Ctrl-C to cancel"
-    print(" " + "_" * (len(message) + 2))
-    print("|" + " " * (len(message) + 2) + "|")
-    print("| " + message + " |")
-    print("|" + " " * (len(message) + 2) + "|")
-    print("| " + cancel + " " * ((len(message) + 1) - len(cancel)) + "|")
-    print("|" + "_" * (len(message) + 2) + "|")
-    print(" ")
+    print_colored(
+        " " + "_" * (len(message) + 2),
+        colors.fg.yellow,
+    )
+    print_colored(
+        "|" + " " * (len(message) + 2) + "|",
+        colors.fg.yellow,
+    )
+    print_colored(
+        "| " + message + " |",
+        colors.fg.yellow,
+    )
+    print_colored(
+        "|" + " " * (len(message) + 2) + "|",
+        colors.fg.yellow,
+    )
+    print_colored(
+        "| " + cancel + " " * ((len(message) + 1) - len(cancel)) + "|",
+        colors.fg.yellow,
+    )
+    print_colored(
+        "|" + "_" * (len(message) + 2) + "|",
+        colors.fg.yellow,
+    )
+    print_colored(
+        " ",
+        colors.fg.yellow,
+    )
 
 
 def deletion(to_delete, get_id):
@@ -76,7 +98,10 @@ def deletion(to_delete, get_id):
         except ObjectDoesNotExist:
             count_non_exits += 1
             # print out the id that does not exist
-            print("Error: User with id {} does not exist".format(user_id))
+            print_colored(
+                "Error: User with id {} does not exist".format(user_id),
+                colors.fg.red,
+            )
             # continue to the next iteration of the loop
             continue
 
@@ -90,7 +115,10 @@ def deletion(to_delete, get_id):
             0 / ContentSummaryLog.objects.filter(user_id=user_id).count()
         except ZeroDivisionError:
             count_errors += 1
-            print("Error: User with id {} has no activity to delete.".format(user_id))
+            print_colored(
+                "Error: User with id {} has no activity to delete.".format(user_id),
+                colors.fg.red,
+            )
             # continue to the next iteration of the loop
             continue
 
@@ -108,7 +136,10 @@ def deletion(to_delete, get_id):
         ExamAttemptLog.objects.filter(user_id=user_id).delete()
 
         # print the user whose activity has been deleted
-        print("All activity for {} has been deleted".format(user_full_name))
+        print_colored(
+            "All activity for {} has been deleted".format(user_full_name),
+            colors.fg.yellow,
+        )
 
         # keeping track of deletions
         num_deleted += 1
@@ -116,38 +147,55 @@ def deletion(to_delete, get_id):
     # once the loop completes, give the user feedback on what has been deleted and what errors were found
     # all learner activity has been deleted
     if len(to_delete) == num_deleted:
-        print("\nDONE! \nActivity for {} user(s) deleted".format(num_deleted))
+        print_colored(
+            "\nDONE! \nActivity for {} user(s) deleted".format(num_deleted),
+            colors.fg.lightgreen,
+        )
     # no user activity was deleted
     elif len(to_delete) == count_errors:
-        print("\nNO USER(S) ACTIVITY WAS DELETED!\n check the errors above.")
+        print_colored(
+            "\nNO USER(S) ACTIVITY WAS DELETED!\n check the errors above.",
+            colors.fg.red,
+        )
     # no supplied users were found
     elif len(to_delete) == count_non_exits:
-        print(
+        print_colored(
             "\nNO MATCHING IDs FOUND! \nMake sure the the has a column 'user_id'"
-            " with user IDs"
+            " with user IDs",
+            colors.fg.red,
         )
     elif len(to_delete) > count_non_exits:
-        print(
+        print_colored(
             "\nActivity for {} user(s) deleted but {} user(s) were found. Please"
-            " check the errors above".format(num_deleted, count_exist)
+            " check the errors above".format(num_deleted, count_exist),
+            colors.fg.lightcyan,
         )
     # some activity was deleted
     else:
-        print(
+        print_colored(
             "\nActivity for {} user(s) deleted but {} user(s) were found. Please"
-            " check the errors above".format(num_deleted, len(to_delete))
+            " check the errors above".format(
+                num_deleted,
+                len(to_delete),
+                colors.fg.lightcyan,
+            )
         )
 
 
 def feed_back(to_delete):
     # Give the user feedback if alot of users are found from a list of leaners
     if len(to_delete) > 2:
-        print(
-            "\n{} users found, deleting users' activity might take several minutes."
-            .format(len(to_delete))
+        print_colored(
+            "\n{} users found, deleting users' activity might take several minutes.".format(
+                len(to_delete)
+            ),
+            colors.fg.lightblue,
         )
     else:
-        print("\nDeleting activity for {} users".format(len(to_delete)))
+        print_colored(
+            "\nDeleting activity for {} users".format(len(to_delete)),
+            colors.fg.yellow,
+        )
 
     print("")
 
@@ -243,10 +291,10 @@ def delete_supplied_user_activity(input_file):
 # Main function called when the script is run
 if __name__ == "__main__":
     args = argParser.parse_args()
-    if (args.input).lower() == 'all':
+    if (args.input).lower() == "all":
         delete_all_activity()
     elif args.input.isdigit():
-        input_grade = str('Grade ' + args.input)
+        input_grade = str("Grade " + args.input)
         delete_activity_with_exclusion(input_grade)
     elif args.input:
         input_file = args.input

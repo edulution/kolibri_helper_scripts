@@ -74,15 +74,14 @@ def delete_users(input_file):
         if len(to_delete) == num_deleted:
             print_colored(
                 "Done! {} users were deleted".format(num_deleted),
-                colors.fg.green,
+                colors.fg.lightgreen,
             )
         else:
             print_colored(
                 "{} user(s) deleted but {} were supplied. Please check the errors above".format(
-                    num_deleted,
-                    len(to_delete),
-                    colors.fg.lightgreen,
-                )
+                    num_deleted, len(to_delete)
+                ),
+                colors.fg.lightcyan,
             )
 
 

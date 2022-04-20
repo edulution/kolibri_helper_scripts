@@ -3,6 +3,7 @@ import kolibri  # noqa F401
 import django
 import random
 import uuid
+from colors import *
 from helpers import (
     get_channels_in_module,
     get_channels_in_level,
@@ -129,10 +130,11 @@ def create_lessons_by_topic(
                 )
 
                 # inform the user that the lesson has been created
-                print(
+                print_colored(
                     "Created Lesson {} with {} resources".format(
                         lesson_title, len(lesson_for_topic.resources)
-                    )
+                    ),
+                    colors.fg.lightblue,
                 )
 
                 # get or create a group with the same name as the channel and assign the lesson to it
@@ -148,10 +150,11 @@ def create_lessons_by_topic(
                 )
 
                 # inform the user that the lesson has been created
-                print(
+                print_colored(
                     "Lesson {} successfully assigned to Group {}".format(
                         lesson_title, str(group_for_lesson.name)
-                    )
+                    ),
+                    colors.fg.lightblue,
                 )
 
                 # activate the lesson
