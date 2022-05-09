@@ -1,9 +1,9 @@
 import kolibri  # noqa F401
 import django
-
 import sys
 import csv
 import argparse
+from colors import *
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -20,7 +20,7 @@ argParser.add_argument(
 
 def delete_users(input_file):
     """Function to delete users supplied in a csv file
-    The csv file is expected to have a column id (uuid of each user to be deleted)
+    The csv file is expected to have a column user_id (uuid of each user to be deleted)
 
     Args:
         input_file (string): Path to the file containig the ids of users to delete
@@ -47,7 +47,10 @@ def delete_users(input_file):
             # catch the exception when the object does not exist
             except ObjectDoesNotExist:
                 # print out the id that does not exist
-                print("Error: User with id {} does not exist".format(user["id"]))
+                print_colored(
+                    "Error: User with id {} does not exist".format(user["id"]),
+                    colors.fg.red,
+                )
                 # continue to the next iteration of the loop
                 continue
             # get the full name of the user from the database
@@ -59,19 +62,26 @@ def delete_users(input_file):
             FacilityUser.objects.get(id=user["id"]).delete()
 
             # print out a message containing the name of the user that was deleted
-            print("User {} deleted".format(user_to_delete))
+            print_colored(
+                "User {} deleted".format(user_to_delete),
+                colors.fg.yellow,
+            )
 
             # increment the counter by 1
             num_deleted += 1
 
         # once the loop completes, print out the number of users that were deleted
         if len(to_delete) == num_deleted:
-            print("Done! {} users were deleted".format(num_deleted))
+            print_colored(
+                "Done! {} users were deleted".format(num_deleted),
+                colors.fg.lightgreen,
+            )
         else:
-            print(
+            print_colored(
                 "{} user(s) deleted but {} were supplied. Please check the errors above".format(
                     num_deleted, len(to_delete)
-                )
+                ),
+                colors.fg.lightcyan,
             )
 
 

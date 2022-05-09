@@ -3,6 +3,7 @@ import kolibri  # noqa F401
 import django
 import random
 import uuid
+from colors import *
 from helpers import (
     get_channels_in_module,
     get_facility_or_default,
@@ -119,10 +120,11 @@ def create_lessons(modulename, classroomname, facilityname=None):
             lesson_for_topic._morango_partition = lesson_for_topic.calculate_partition()
 
             # inform the user that the lesson has been created
-            print(
+            print_colored(
                 "Created Lesson {} with {} resources".format(
                     lesson_title, len(lesson_for_topic.resources)
-                )
+                ),
+                colors.fg.yellow,
             )
 
             # get or create a group with the same name as the channel and assign the lesson to it
@@ -138,10 +140,11 @@ def create_lessons(modulename, classroomname, facilityname=None):
             )
 
             # inform the user that the lesson has been created
-            print(
+            print_colored(
                 "Lesson {} successfully assigned to Group {}".format(
                     lesson_title, str(group_for_lesson.name)
-                )
+                ),
+                colors.fg.lightblue,
             )
 
             # activate the lesson
