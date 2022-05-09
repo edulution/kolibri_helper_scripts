@@ -1,6 +1,7 @@
 # import kolibri and django to ensure the script runs in kolibri shell
 import kolibri  # noqa F401
 import django
+from colors import *
 
 django.setup()  # noqa F401
 
@@ -45,7 +46,10 @@ def get_live_learners():
 
     except OperationalError:
         # catch operational errors and inform the user
-        print("Database unavailable, not able to retrieve users and sessions info")
+        print_colored(
+            "Database unavailable, not able to retrieve users and sessions info",
+            colors.fg.red,
+        )
 
     # return an array of user_ids of live learners
     return live_learners
@@ -86,11 +90,14 @@ def insert_live_learners_into_db(live_learners_arr):
         connection.commit()
 
         # Print the number of live learners that have been inserted into the table
-        print("%s users(s) currently logged in" % len(live_learners_arr))
+        print_colored(
+            "%s users(s) currently logged in" % len(live_learners_arr),
+            colors.fg.lightgreen,
+        )
 
     except (Exception, psycopg2.Error) as error:
         # catch any errors from the database and print them to the console
-        print("Error while connecting to the database", error)
+        print_colored("Error while connecting to the database", error)
 
 
 # main excecution of script

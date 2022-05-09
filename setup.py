@@ -1,5 +1,6 @@
 import kolibri  # noqa F401
 import django
+from colors import *
 
 django.setup()
 
@@ -15,15 +16,24 @@ from create_level_revision_quizzes import create_revision_quizzes
 
 # Delete all groups
 LearnerGroup.objects.all().delete()
-print("Deleting all existing Groups")
+print_colored(
+    "Deleting all existing Groups",
+    colors.fg.yellow,
+)
 
 # Delete all lessons
 Lesson.objects.all().delete()
-print("Deleting all existing Lessons")
+print_colored(
+    "Deleting all existing Lessons",
+    colors.fg.yellow,
+)
 
 # Delete all quizzes
 Exam.objects.all().delete()
-print("Deleting all existing Quizzes")
+print_colored(
+    "Deleting all existing Quizzes",
+    colors.fg.yellow,
+)
 
 # Get a list of all of the existing classrooms
 classroom_names = [str(c) for c in Classroom.objects.all()]

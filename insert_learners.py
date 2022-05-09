@@ -5,6 +5,7 @@ import sys
 import uuid
 import csv
 import argparse
+from colors import *
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -63,21 +64,73 @@ def insert_users(input_file, facility=def_facility):
         reader = csv.DictReader(f)
         users = [r for r in reader]
 
+        # Initialize num_inserted to 0
+        num_inserted = 0
+
         for user in users:
-            _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
-                dataset_id=dataset_id, user_id=user["user_id"]
+
+            username_exists = FacilityUser.objects.filter(
+                username=user["username"], facility_id=facility_id
+            ).exists()
+            user_id_exists = FacilityUser.objects.filter(
+                id=user["user_id"], facility_id=facility_id
+            ).exists()
+            if user_id_exists:
+                # if a user with the same user_id already exists in the facility
+                # raise a value error and terminate the script
+                raise ValueError(
+                    "Duplicate user ID. There is already a user with ID {}".format(
+                        user["user_id"],
+                        colors.fg.red,
+                    )
+                )
+                sys.exit()
+            elif username_exists:
+                # if a user with the same username already exists in the facility
+                # raise a value error and terminate the script
+                raise ValueError(
+                    "Duplicate username. There is already a user called {}".format(
+                        user["username"],
+                        colors.fg.red,
+                    )
+                )
+                sys.exit()
+            else:
+                # Generate the morango partition
+                _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
+                    dataset_id=dataset_id, user_id=user["user_id"]
+                )
+
+                # Create the user
+                FacilityUser.objects.create(
+                    id=user["user_id"],
+                    full_name=user["full_name"],
+                    username=user["username"],
+                    password=make_password(user["username"]),
+                    dataset_id=dataset_id,
+                    facility_id=facility_id,
+                    _morango_partition=_morango_partition,
+                    _morango_source_id=uuid.uuid4(),
+                )
+                print_colored(
+                    "Created user: {}".format(user["full_name"]),
+                    colors.fg.yellow,
+                )
+            # Increment num_inserted by 1
+            num_inserted += 1
+
+        # Print out the total number of users that were inserted
+        if num_inserted == 0:
+            # If not learners were inserted, something is wrong and there will be errors displayed in the console
+            print_colored(
+                "No learners were inserted. Kindly check the errors above",
+                colors.fg.red,
             )
-            FacilityUser.objects.create(
-                id=user["user_id"],
-                full_name=user["full_name"],
-                username=user["username"],
-                password=make_password(user["username"]),
-                dataset_id=dataset_id,
-                facility_id=facility_id,
-                _morango_partition=_morango_partition,
-                _morango_source_id=uuid.uuid4(),
+        else:
+            print_colored(
+                "{} user(s) were inserted".format(num_inserted),
+                colors.fg.lightgreen,
             )
-            print("Created user: {}".format(user["full_name"]))
 
 
 if __name__ == "__main__":
