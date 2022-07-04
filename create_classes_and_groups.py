@@ -3,6 +3,7 @@ import django
 import sys
 import uuid
 import csv
+from colors import *
 import argparse
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -63,7 +64,10 @@ def create_classes_and_groups(
     # Catch the exception when the Facility does not exist
     except ObjectDoesNotExist:
         # Print out the name of the Facility that does not exist and terminate the script
-        print("Error: Facility with the name {} does not exist".format(facilityname))
+        print_colored(
+            "Error: Facility with the name {} does not exist".format(facilityname),
+            colors.fg.red,
+        )
         # exit in an error state
         sys.exit(
             "Classrooms and Groups have not been created. Check the error(s) above"

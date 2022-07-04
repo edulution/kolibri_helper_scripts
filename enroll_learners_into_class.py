@@ -4,6 +4,7 @@ import sys
 import uuid
 import csv
 import argparse
+from colors import *
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -32,7 +33,7 @@ argParser.add_argument(
     "-d",
     action="store_true",
     default=False,
-    help="Delete all existing memberships. The default value is False",
+    help="Delete existing memberships for each user before memberships. The default value is False",
 )
 
 # Get the name of the default facility on the device
@@ -70,13 +71,12 @@ def enroll_learners_into_class(
     # Catch the exception when the Facility does not exist
     except ObjectDoesNotExist:
         # Print out the name of the Facility that does not exist and terminate the script
-        print("Error: Facility with the name {} does not exist".format(facility))
+        print_colored(
+            "Error: Facility with the name {} does not exist".format(facility),
+            colors.fg.red,
+        )
         # exit in an error state
         sys.exit("Learners were not enrolled successfully. Check the error(s) above")
-
-    # Delete all existing memberships
-    if delete_existing_memberships:
-        Membership.objects.all().delete()
 
     # Use csv dictreader to get the contents of the file
     with open(input_file) as f:
@@ -86,45 +86,91 @@ def enroll_learners_into_class(
         # Loop through the list of users read from the input file
         for user in users:
 
-            user_exists = (
-                FacilityUser.objects.filter(
-                    id=user["user_id"], facility_id=facility_id
-                ).exists()
-                and user["centre"] == facilityname
-            )
-
-            classroom_exists = Classroom.objects.filter(name=user["grade"]).exists()
-
-            # If the user and classroom exist, create the membership
-            if user_exists and classroom_exists:
+            try:
+                # Attempt to get a reference to the user object supplied if it exists in the supplied centre(facility)
                 user_obj = FacilityUser.objects.get(
-                    id=user["user_id"], facility_id=facility_id
+                    id=user["user_id"],
+                    facility_id=Facility.objects.get(name=user["centre"]).id,
                 )
 
-                classroom_for_user = classroom_exists = Classroom.objects.get(
+            # Catch the exception when the user does not exist
+            except ObjectDoesNotExist:
+                # Print out the user id that does not exist in the facility and terminate the script
+                print_colored(
+                    "Error: User with id {} does not exist in Facility {}".format(
+                        user["user_id"], user["centre"]
+                    ),
+                    colors.fg.red,
+                )
+                continue
+
+            try:
+                # Attempt to get a reference to the grade(classroom) supplied if it exists
+                classroom_for_user = Classroom.objects.get(
                     name=user["grade"], parent_id=facility_id
                 )
 
-                Membership.objects.create(user=user_obj, collection=classroom_for_user)
+            # Catch the exception when the grade(classroom) does not exist
+            except ObjectDoesNotExist:
+                # Print out the name of the grade(classroom) that does not exist and terminate the script
+                print_colored(
+                    "Error: Classroom with the name {} does not exist".format(
+                        user["grade"]
+                    ),
+                    colors.fg.red,
+                )
+                # exit in an error state
+                continue
 
+            # If the delete flag is supplied, delete all existing memberships for the user
+            if delete_existing_memberships:
+                print_colored(
+                    "Deleting Memberships for user: {}....".format(
+                        str(user_obj.full_name)
+                    ),
+                    colors.fg.yellow,
+                )
+                Membership.objects.filter(user_id=user_obj.id).delete()
+
+            if not user_obj.is_member_of(classroom_for_user):
+                Membership.objects.create(user=user_obj, collection=classroom_for_user)
                 # Print out a message confirming the membership has been created
-                print(
+                print_colored(
                     "Created Membership for user: {} in Classroom {}".format(
                         str(user_obj.full_name), str(classroom_for_user.name)
-                    )
+                    ),
+                    colors.fg.green,
                 )
-
                 num_enrolled += 1
-            # If the user and classroom do not exist, skip to the next iteration of the loop
+
             else:
+                print_colored(
+                    "User : {} is already enrolled in Classroom {}. Skipping...".format(
+                        str(user_obj.full_name), str(classroom_for_user.name)
+                    ),
+                    colors.fg.yellow,
+                )
                 continue
 
     # Print out the total number of users that were created
     if num_enrolled == 0:
         # If not learners were enrolled, something is wrong and there will be errors displayed in the console
-        print("No learners were enrolled. Kindly check the errors above")
+        print_colored(
+            "No learners were enrolled. Kindly check the errors/messages above",
+            colors.fg.red,
+        )
+    elif num_enrolled != len(users):
+        print_colored(
+            "{} user(s) were enrolled into their classes. Some learners were not enrolled successfully or were skipped. Kindly check the errors/messages above".format(
+                num_enrolled
+            ),
+            colors.fg.lightcyan,
+        )
     else:
-        print("{} user(s) were enrolled into their classes".format(num_enrolled))
+        print_colored(
+            "{} user(s) were enrolled into their classes".format(num_enrolled),
+            colors.fg.lightgreen,
+        )
 
 
 # Main function called when script is run

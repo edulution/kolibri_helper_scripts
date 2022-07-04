@@ -5,6 +5,7 @@ import sys
 import uuid
 import csv
 import argparse
+from colors import *
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -68,7 +69,7 @@ def insert_users(input_file, facility=def_facility):
 
         for user in users:
 
-            user_exists = FacilityUser.objects.filter(
+            username_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
             ).exists()
             user_id_exists = FacilityUser.objects.filter(
@@ -79,16 +80,18 @@ def insert_users(input_file, facility=def_facility):
                 # raise a value error and terminate the script
                 raise ValueError(
                     "Duplicate user ID. There is already a user with ID {}".format(
-                        user["user_id"]
+                        user["user_id"],
+                        colors.fg.red,
                     )
                 )
                 sys.exit()
-            elif user_exists:
+            elif username_exists:
                 # if a user with the same username already exists in the facility
                 # raise a value error and terminate the script
                 raise ValueError(
                     "Duplicate username. There is already a user called {}".format(
-                        user["username"]
+                        user["username"],
+                        colors.fg.red,
                     )
                 )
                 sys.exit()
@@ -109,16 +112,25 @@ def insert_users(input_file, facility=def_facility):
                     _morango_partition=_morango_partition,
                     _morango_source_id=uuid.uuid4(),
                 )
-                print("Created user: {}".format(user["full_name"]))
+                print_colored(
+                    "Created user: {}".format(user["full_name"]),
+                    colors.fg.yellow,
+                )
             # Increment num_inserted by 1
             num_inserted += 1
 
         # Print out the total number of users that were inserted
         if num_inserted == 0:
             # If not learners were inserted, something is wrong and there will be errors displayed in the console
-            print("No learners were inserted. Kindly check the errors above")
+            print_colored(
+                "No learners were inserted. Kindly check the errors above",
+                colors.fg.red,
+            )
         else:
-            print("{} user(s) were inserted".format(num_inserted))
+            print_colored(
+                "{} user(s) were inserted".format(num_inserted),
+                colors.fg.lightgreen,
+            )
 
 
 if __name__ == "__main__":

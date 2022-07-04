@@ -3,6 +3,7 @@ import django
 
 import uuid
 import random
+from colors import *
 from helpers import (
     get_facility_or_default,
     get_or_create_classroom,
@@ -20,7 +21,7 @@ from kolibri.core.content.models import ContentNode, ChannelMetadata  # noqa E40
 from le_utils.constants import content_kinds  # noqa E402
 
 
-def create_quizzes_by_level(
+def create_quizzes_by_topic(
     classroomname,
     facilityname=None,
     levels=["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
@@ -37,7 +38,6 @@ def create_quizzes_by_level(
     Returns:
         None
     """
-
 
     # get a reference to the facility to create the lessons in
     facility_for_quizzes = get_facility_or_default(facilityname)
@@ -140,8 +140,11 @@ def create_quizzes_by_level(
 
                 # If there werent enough items to make a quiz, inform the user
                 if len(quiz_content) == 0:
-                    print "Could not cerate quiz {}. Not enough content".format(
-                        str(quiz_title)
+                    print_colored(
+                        "Could not cerate quiz {}. Not enough content".format(
+                            str(quiz_title)
+                        ),
+                        colors.fg.red,
                     )
 
                 else:
@@ -160,12 +163,13 @@ def create_quizzes_by_level(
 
                     # Inform the user that the new quiz has been generated in the class
                     # Print('Quiz {} created in class {}'.format(str(new_quiz.title), str(class_for_quizzes.name)))
-                    print (
+                    print_colored(
                         "Quiz {} created in class {} with {} content items".format(
                             str(new_quiz.title),
                             str(class_for_quizzes.name),
                             str(n_content_items),
-                        )
+                        ),
+                        colors.fg.lightblue,
                     )
 
                     # get or create a group to assign the quiz to based on the channel name
@@ -181,8 +185,9 @@ def create_quizzes_by_level(
                     )
 
                     # inform the user that the quiz has been assigned successfully
-                    print (
+                    print_colored(
                         "Quiz {} assigned to group {}".format(
                             str(new_quiz.title), str(group_for_quiz.name)
-                        )
+                        ),
+                        colors.fg.lightblue,
                     )

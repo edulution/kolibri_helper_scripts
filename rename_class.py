@@ -5,6 +5,7 @@ import django
 
 import sys
 import argparse
+from colors import *
 from django.core.exceptions import ObjectDoesNotExist
 
 django.setup()
@@ -24,7 +25,10 @@ def rename_class(old_name, new_name):
     try:
         Classroom.objects.get(name=old_name)
     except ObjectDoesNotExist:
-        print("A classroom with the name {} was not found".format(old_name))
+        print_colored(
+            "A classroom with the name {} was not found".format(old_name),
+            colors.fg.red,
+        )
         sys.exit("The Classroom was not renamed. Please check the error(s) above")
 
     # get a reference to the classroom object to rename
@@ -36,7 +40,10 @@ def rename_class(old_name, new_name):
     class_to_rename.save()
 
     # print a message to the console to indicate that it was successful
-    print("Done! Class {} was renamed to {}".format(old_name, new_name))
+    print_colored(
+        "Done! Class {} was renamed to {}".format(old_name, new_name),
+        colors.fg.lightgreen,
+    )
 
 
 if __name__ == "__main__":
