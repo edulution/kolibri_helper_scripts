@@ -41,6 +41,10 @@
 # Level 5 Section 2 - a5cd9f9f000e41459a95875d7dfd3e68
 # Level 5 Section 3 - 6c4089232a72447eabbdf83b7c5612a4
 # Level 5 Section 4 - 28f4920a7b444e29af4f1e8d00ca332b
+# Level 6 Section 1 - cf1b82ba14524cf78a08ce8c01626b28
+# Level 6 Section 2 - b21103bd85f64e18b6a6e4cb50665386
+# Level 6 Section 3 - 20e95963caea4ab5ac505c60f3c5a5bb
+# Level 6 Section 4 - 1ab4e3287ce745ee9166bb13021a3b55
 
 
 delete_channels(){
@@ -83,6 +87,10 @@ delete_channels(){
 		"a5cd9f9f000e41459a95875d7dfd3e68"
 		"6c4089232a72447eabbdf83b7c5612a4"
 		"28f4920a7b444e29af4f1e8d00ca332b"
+		"cf1b82ba14524cf78a08ce8c01626b28"
+		"b21103bd85f64e18b6a6e4cb50665386"
+		"20e95963caea4ab5ac505c60f3c5a5bb"
+		"1ab4e3287ce745ee9166bb13021a3b55"
 		)
 
 	# Inform the user that the deletion has begun

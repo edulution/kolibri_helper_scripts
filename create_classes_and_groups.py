@@ -35,7 +35,14 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 # List of the LearnerGroups we want to create in each class
-wanted_learnergroups = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
+wanted_learnergroups = [
+    "Level 1",
+    "Level 2",
+    "Level 3",
+    "Level 4",
+    "Level 5",
+    "Level 6",
+]
 
 
 def create_classes_and_groups(
