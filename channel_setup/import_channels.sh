@@ -1,5 +1,25 @@
 #!/bin/bash
 
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "NAME"
+  echo "  import_channels_network - Import numeracy channels"
+  echo
+  echo "SYNOPSIS"
+  echo "  ./import_channels [CHANNEL_ID]"
+  echo
+  echo "DESCRIPTION"
+  echo "  With no CHANNEL_ID supplied, the script imports all numeracy channels from the "
+  echo "  local content pack store on a device /opt directory" 
+  echo
+  echo "Examples"
+  echo " ./import_channels"
+  echo "	Imports all numeracy channels"
+  echo
+  echo "  ./import_channels f3f6bf4b9c424b6fbd90bece1418a415"
+  echo "	Imports only Level 1 Section 1 of the numeracy channels"
+  exit 1
+fi
+
 # channel_ids
 #==============
 # Level 1 Section 1 - f3f6bf4b9c424b6fbd90bece1418a415

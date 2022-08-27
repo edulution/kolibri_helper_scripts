@@ -1,5 +1,30 @@
 #!/bin/bash
 
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "NAME"
+  echo "  export_channels - Export numeracy channels"
+  echo
+  echo "SYNOPSIS"
+  echo "  ./export_channels [CHANNEL_ID] ... [EXPORT_DIR]"
+  echo
+  echo "DESCRIPTION"
+  echo "  With no CHANNEL_ID supplied, the script exports all numeracy channels to a device"
+  echo "  home directory or desired export directory if supplied." 
+  echo
+  echo "Examples"
+  echo " ./export_channels"
+  echo "	Exports all numeracy channels to the home directory"
+  echo
+  echo "  ./export_channels f3f6bf4b9c424b6fbd90bece1418a415"
+  echo "	Exports only Level 1 Section 1 of the numeracy channels to the home directory"
+  echo
+  echo "  ./export_channels f3f6bf4b9c424b6fbd90bece1418a415 ~/Desktop"
+  echo "	Exports only Level 1 Section 1 of the numeracy channels to the Desktop directory"
+
+  exit 1
+fi
+
+
 # channel_ids
 #==============
 # Level 1 Section 1 - f3f6bf4b9c424b6fbd90bece1418a415

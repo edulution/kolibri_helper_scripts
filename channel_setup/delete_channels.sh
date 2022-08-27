@@ -1,5 +1,24 @@
 #!/bin/bash
 
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "NAME"
+  echo "  delete_channels - Delete numeracy channels"
+  echo
+  echo "SYNOPSIS"
+  echo "  ./delete_channels [CHANNEL_ID]"
+  echo
+  echo "DESCRIPTION"
+  echo "  With no CHANNEL_ID supplied, the script deletes all numeracy channels from a device"
+  echo 
+  echo "Examples"
+  echo " ./delete_channels"
+  echo "	Deletes all numeracy channels"
+  echo
+  echo " ./delete_channels f3f6bf4b9c424b6fbd90bece1418a415"
+  echo "	Deletes only Level 1 Section 1 of the numeracy channels"
+  exit 1
+fi
+
 # Script to delete all numeracy channels from a device
 
 # channel_ids
