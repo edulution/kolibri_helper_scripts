@@ -9,6 +9,7 @@
 # Level 2 Section 1 - f6e8f1f569c54bc58ecb54d826cd3783
 # Level 2 Section 2 - 5126a907e5284345847c8ca749c8cd9b
 # Level 2 Section 3 - c32737bf26474dc8a81de3d093075830
+# Level 2 Section 3 (replaced)- 521f889dc8634998b5542a526d428b85
 # Level 2 Section 4 - 0985900c047a41738e796f19d9b57ed5
 # Level 3 Section 1 - c0302f6cd0624778bc8dd7a2b91d09b4
 # Level 3 Section 2 - ddf25e8fcde84e8998118daffb2d8655
@@ -66,6 +67,7 @@ import_channels_local(){
 		"b21103bd85f64e18b6a6e4cb50665386"
 		"20e95963caea4ab5ac505c60f3c5a5bb"
 		"1ab4e3287ce745ee9166bb13021a3b55"
+		"521f889dc8634998b5542a526d428b85"
 		)
 
 	# Inform the user that the importing has begun
