@@ -26,7 +26,7 @@ argParser.add_argument(
 )
 
 
-def delete_users(input_file,permanently_delete_user=False):
+def delete_users(input_file, permanently_delete_user=False):
     """Function to delete users supplied in a csv file
     The csv file is expected to have a column user_id (uuid of each user to be deleted)
 
@@ -66,7 +66,7 @@ def delete_users(input_file,permanently_delete_user=False):
 
             user_obj = FacilityUser.objects.get(id=user["id"])
 
-            #if the hard delete flag is supplied, permanently delete the user
+            # if the hard delete flag is supplied, permanently delete the user
             if permanently_delete_user:
                 # delete the user
                 # note: deleting in this way cascades to other models that reference the user
@@ -76,14 +76,14 @@ def delete_users(input_file,permanently_delete_user=False):
                 # print out a message containing the name of the user that was permanently deleted
                 print_colored(
                     "User {} has been permanently deleted".format(user_to_delete),
-                    colors.fg.yellow,
+                    colors.fg.orange,
                 )
 
                 # increment the counter by 1
                 num_deleted += 1
             else:
-                #soft delete
-                user_obj.set_deleted = True #set deleted to true
+                # soft delete
+                user_obj.set_deleted = True  # set deleted to true
                 user_obj.save()
 
                 # print out a message containing the name of the user that was soft deleted
@@ -115,6 +115,6 @@ if __name__ == "__main__":
     args = argParser.parse_args()
     if args.file:
         open_file = args.file
-        delete_users(open_file,permanently_delete_user=args.hard)
+        delete_users(open_file, permanently_delete_user=args.hard)
     else:
         sys.exit("Please supply a file containing the users to delete")
