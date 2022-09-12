@@ -22,6 +22,10 @@
 # Level 5 Section 2 - a5cd9f9f000e41459a95875d7dfd3e68
 # Level 5 Section 3 - 6c4089232a72447eabbdf83b7c5612a4
 # Level 5 Section 4 - 28f4920a7b444e29af4f1e8d00ca332b
+# Level 6 Section 1 - cf1b82ba14524cf78a08ce8c01626b28
+# Level 6 Section 2 - b21103bd85f64e18b6a6e4cb50665386
+# Level 6 Section 3 - 20e95963caea4ab5ac505c60f3c5a5bb
+# Level 6 Section 4 - 1ab4e3287ce745ee9166bb13021a3b55
 # Grade 7 Numeracy (Zambia) - 8d368058656544e2b7fe62eb2a632698
 # Grade 7 Literacy (Zambia) - 96578ffc06e44a46b021540cb217f9c9
 # Coach Professional Development - 19ea4c94ee484cb0b5bb617f5511f4c1
@@ -58,6 +62,10 @@ import_channels_local(){
 		"28f4920a7b444e29af4f1e8d00ca332b"
 		"8d368058656544e2b7fe62eb2a632698"
 		"19ea4c94ee484cb0b5bb617f5511f4c1"
+		"cf1b82ba14524cf78a08ce8c01626b28"
+		"b21103bd85f64e18b6a6e4cb50665386"
+		"20e95963caea4ab5ac505c60f3c5a5bb"
+		"1ab4e3287ce745ee9166bb13021a3b55"
 		)
 
 	# Inform the user that the importing has begun
