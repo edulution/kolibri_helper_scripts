@@ -47,7 +47,6 @@ import_channels_local(){
 		"f12e2f67d5894b34bb942484d880c4a6"
 		"f6e8f1f569c54bc58ecb54d826cd3783"
 		"5126a907e5284345847c8ca749c8cd9b"
-		"c32737bf26474dc8a81de3d093075830"
 		"521f889dc8634998b5542a526d428b85"
 		"0985900c047a41738e796f19d9b57ed5"
 		"c0302f6cd0624778bc8dd7a2b91d09b4"
@@ -88,3 +87,6 @@ import_channels_local(){
 
 	echo "Done!"
 }
+
+
+import_channels_local "$1"
