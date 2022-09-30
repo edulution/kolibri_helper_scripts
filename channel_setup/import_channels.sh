@@ -8,7 +8,8 @@
 # Level 1 Section 4 - f12e2f67d5894b34bb942484d880c4a6
 # Level 2 Section 1 - f6e8f1f569c54bc58ecb54d826cd3783
 # Level 2 Section 2 - 5126a907e5284345847c8ca749c8cd9b
-# Level 2 Section 3 - c32737bf26474dc8a81de3d093075830
+# Level 2 Section 3 (old) - c32737bf26474dc8a81de3d093075830
+# Level 2 Section 3 (new) - 521f889dc8634998b5542a526d428b85
 # Level 2 Section 4 - 0985900c047a41738e796f19d9b57ed5
 # Level 3 Section 1 - c0302f6cd0624778bc8dd7a2b91d09b4
 # Level 3 Section 2 - ddf25e8fcde84e8998118daffb2d8655
@@ -47,6 +48,7 @@ import_channels_local(){
 		"f6e8f1f569c54bc58ecb54d826cd3783"
 		"5126a907e5284345847c8ca749c8cd9b"
 		"c32737bf26474dc8a81de3d093075830"
+		"521f889dc8634998b5542a526d428b85"
 		"0985900c047a41738e796f19d9b57ed5"
 		"c0302f6cd0624778bc8dd7a2b91d09b4"
 		"ddf25e8fcde84e8998118daffb2d8655"
@@ -86,5 +88,3 @@ import_channels_local(){
 
 	echo "Done!"
 }
-
-import_channels_local "$1"
