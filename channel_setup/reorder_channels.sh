@@ -10,7 +10,8 @@ python -m kolibri manage setchannelposition 03761fe9-a242-4e9e-bd36-7fbae14dc134
 python -m kolibri manage setchannelposition f12e2f67-d589-4b34-bb94-2484d880c4a6 4 # Level 1 Section 4
 python -m kolibri manage setchannelposition f6e8f1f5-69c5-4bc5-8ecb-54d826cd3783 5 # Level 2 Section 1
 python -m kolibri manage setchannelposition 5126a907-e528-4345-847c-8ca749c8cd9b 6 # Level 2 Section 2
-python -m kolibri manage setchannelposition c32737bf-2647-4dc8-a81d-e3d093075830 7 # Level 2 Section 3
+# python -m kolibri manage setchannelposition c32737bf-2647-4dc8-a81d-e3d093075830 7 # Level 2 Section 3
+python -m kolibri manage setchannelposition 521f889d-c863-4998-b554-2a526d428b85 7 # Level 2 Section 3
 python -m kolibri manage setchannelposition 0985900c-047a-4173-8e79-6f19d9b57ed5 8 # Level 2 Section 4
 python -m kolibri manage setchannelposition c0302f6c-d062-4778-bc8d-d7a2b91d09b4 9 # Level 3 Section 1
 python -m kolibri manage setchannelposition ddf25e8f-cde8-4e89-9811-8daffb2d8655 10 # Level 3 Section 2
