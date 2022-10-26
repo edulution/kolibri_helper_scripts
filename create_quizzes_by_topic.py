@@ -24,7 +24,7 @@ from le_utils.constants import content_kinds  # noqa E402
 def create_quizzes_by_topic(
     classroomname,
     facilityname=None,
-    levels=["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
+    levels=["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6"],
 ):
     """Function that creates 1 quiz for each topic in each channel having the module passed in
     each quiz contains 10 questions

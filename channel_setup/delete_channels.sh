@@ -27,7 +27,8 @@
 # Level 1 Section 4 - f12e2f67d5894b34bb942484d880c4a6
 # Level 2 Section 1 - f6e8f1f569c54bc58ecb54d826cd3783
 # Level 2 Section 2 - 5126a907e5284345847c8ca749c8cd9b
-# Level 2 Section 3 - c32737bf26474dc8a81de3d093075830
+# Level 2 Section 3 (old) - c32737bf26474dc8a81de3d093075830
+# Level 2 Section 3 (new) - 521f889dc8634998b5542a526d428b85
 # Level 2 Section 4 - 0985900c047a41738e796f19d9b57ed5
 # Level 3 Section 1 - c0302f6cd0624778bc8dd7a2b91d09b4
 # Level 3 Section 2 - ddf25e8fcde84e8998118daffb2d8655
@@ -41,6 +42,10 @@
 # Level 5 Section 2 - a5cd9f9f000e41459a95875d7dfd3e68
 # Level 5 Section 3 - 6c4089232a72447eabbdf83b7c5612a4
 # Level 5 Section 4 - 28f4920a7b444e29af4f1e8d00ca332b
+# Level 6 Section 1 - cf1b82ba14524cf78a08ce8c01626b28
+# Level 6 Section 2 - b21103bd85f64e18b6a6e4cb50665386
+# Level 6 Section 3 - 20e95963caea4ab5ac505c60f3c5a5bb
+# Level 6 Section 4 - 1ab4e3287ce745ee9166bb13021a3b55
 
 
 delete_channels(){
@@ -70,6 +75,7 @@ delete_channels(){
 		"f6e8f1f569c54bc58ecb54d826cd3783"
 		"5126a907e5284345847c8ca749c8cd9b"
 		"c32737bf26474dc8a81de3d093075830"
+		"521f889dc8634998b5542a526d428b85"
 		"0985900c047a41738e796f19d9b57ed5"
 		"c0302f6cd0624778bc8dd7a2b91d09b4"
 		"ddf25e8fcde84e8998118daffb2d8655"
@@ -83,6 +89,10 @@ delete_channels(){
 		"a5cd9f9f000e41459a95875d7dfd3e68"
 		"6c4089232a72447eabbdf83b7c5612a4"
 		"28f4920a7b444e29af4f1e8d00ca332b"
+		"cf1b82ba14524cf78a08ce8c01626b28"
+		"b21103bd85f64e18b6a6e4cb50665386"
+		"20e95963caea4ab5ac505c60f3c5a5bb"
+		"1ab4e3287ce745ee9166bb13021a3b55"
 		)
 
 	# Inform the user that the deletion has begun
