@@ -91,6 +91,7 @@ delete_channels(){
 		"b21103bd85f64e18b6a6e4cb50665386"
 		"20e95963caea4ab5ac505c60f3c5a5bb"
 		"1ab4e3287ce745ee9166bb13021a3b55"
+		"521f889dc8634998b5542a526d428b85"
 		)
 
 	# Inform the user that the deletion has begun
