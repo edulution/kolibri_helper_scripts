@@ -32,27 +32,24 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 
-def increment_username(user):
-    if user_exists:
-        # Get the first two integers in the username
-        first_two_numbers = [int(c) for c in user["username"] if c.isdigit()][:2]
-        # Increment the first two integers
-        first_two_numbers = [str(i + 1) for i in first_two_numbers]
-        # Replace the first two integers in the username with the incremented values
-        user["username"] = "".join(
-            [
-                user["username"][i]
-                if not user["username"][i].isdigit()
-                else first_two_numbers[j]
-                for i, j in enumerate(user["username"])
-                if j < 2
-            ]
-        )
-        print_colored(
-            "New incremented username: ",
-            user["username"].format(),
-            colors.fg.red,
-        )
+def increment_username(username):
+    # Get the first two integers in the username
+    first_two_numbers = [int(c) for c in username if c.isdigit()][:2]
+    # Increment the first two integers
+    first_two_numbers = [str(i + 1) for i in first_two_numbers]
+    # Replace the first two integers in the username with the incremented values
+    username = "".join(
+        [
+            username[i] if not username[i].isdigit() else first_two_numbers[j]
+            for i, j in enumerate(first_two_numbers)
+            if j < 2
+        ]
+    )
+    # print_colored(
+    #     "New incremented username: ,{}"
+    #     user["username"].format(new_username),
+    #     colors.fg.red,
+    # )
 
 
 def create_users(input_file, facility=def_facility):
@@ -96,14 +93,15 @@ def create_users(input_file, facility=def_facility):
 
         # Loop through the list of users read from the input file
         for user in users:
-
             user_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
             ).exists()
             if user_exists:
+
                 # if a user with the same username already exists in the facility increment the username
-                increment_username(user)
+                new_username = increment_username(user["username"])
             else:
+                new_username = user["username"]
                 # Create the user
                 # Generate a new user_id
                 new_user_id = uuid.uuid4()
@@ -117,8 +115,8 @@ def create_users(input_file, facility=def_facility):
                 FacilityUser.objects.create(
                     id=new_user_id,
                     full_name=user["full_name"],
-                    username=user["username"],
-                    password=make_password(user["username"]),
+                    username=new_username,
+                    password=make_password(new_username),
                     dataset_id=dataset_id,
                     facility_id=facility_id,
                     _morango_partition=_morango_partition,
