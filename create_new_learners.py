@@ -32,6 +32,29 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 
+def increment_username(user):
+    if user_exists:
+        # Get the first two integers in the username
+        first_two_numbers = [int(c) for c in user["username"] if c.isdigit()][:2]
+        # Increment the first two integers
+        first_two_numbers = [str(i + 1) for i in first_two_numbers]
+        # Replace the first two integers in the username with the incremented values
+        user["username"] = "".join(
+            [
+                user["username"][i]
+                if not user["username"][i].isdigit()
+                else first_two_numbers[j]
+                for i, j in enumerate(user["username"])
+                if j < 2
+            ]
+        )
+        print_colored(
+            "New incremented username: ",
+            user["username"].format(),
+            colors.fg.red,
+        )
+
+
 def create_users(input_file, facility=def_facility):
     """Function to create new users from a csv file
     The file is expected to have coolumns full_name and username. All other columns are ignored
@@ -78,17 +101,8 @@ def create_users(input_file, facility=def_facility):
                 username=user["username"], facility_id=facility_id
             ).exists()
             if user_exists:
-                # if a user with the same username already exists in the facility
-                # raise a value error and terminate the script
-                raise ValueError(
-                    print_colored(
-                        "Duplicate username. There is already a user called {}".format(
-                            user["username"]
-                        ),
-                        colors.fg.red,
-                    )
-                )
-                sys.exit()
+                # if a user with the same username already exists in the facility increment the username
+                increment_username(user)
             else:
                 # Create the user
                 # Generate a new user_id
