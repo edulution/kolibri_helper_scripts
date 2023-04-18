@@ -79,21 +79,23 @@ def insert_coaches(input_file, facility=def_facility):
                 if user_id_exists:
                     # if a user with the same user_id already exists in the facility
                     # raise a value error and terminate the script
-                    raise ValueError(
+                    print_colored(
                         "Duplicate user ID. There is already a user with ID {}".format(
                             user["user_id"]
-                        )
+                        ),
+                        colors.fg.yellow,
                     )
-                    sys.exit()
+                    continue
                 elif username_exists:
                     # if a user with the same username already exists in the facility
                     # raise a value error and terminate the script
-                    raise ValueError(
+                    print_colored(
                         "Duplicate username. There is already a user called {}".format(
                             user["username"]
-                        )
+                        ),
+                        colors.fg.yellow,
                     )
-                    sys.exit()
+                    continue
                 else:
                     # Generate the morango partition
                     _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
