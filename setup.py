@@ -36,10 +36,19 @@ print_colored(
 )
 
 # Get a list of all of the existing classrooms
-classroom_names = [str(c) for c in Classroom.objects.all()]
+classrooms = Classroom.objects.all()
 
-# Create lessons and Quizzes by level for each classroom
-for classroom in classroom_names:
-    create_lessons_by_topic(classroom)
-    create_quizzes_by_topic(classroom)
-    create_revision_quizzes(classroom)
+for classroom in classrooms:
+    # Get the facility for each classroom
+    facility_for_class = classroom.get_facility()
+
+    # Get the facility name
+    facility_name = str(facility_for_class.name)
+
+    # Get the name of the classroom from the object
+    classroom_name = str(classroom.name)
+
+    # Now create lessons, quizzes and revision quizzes passing in classroom and facility
+    create_lessons_by_topic(classroomname=classroom_name, facilityname=facility_name)
+    create_quizzes_by_topic(classroomname=classroom_name, facilityname=facility_name)
+    create_revision_quizzes(classroomname=classroom_name, facilityname=facility_name)
