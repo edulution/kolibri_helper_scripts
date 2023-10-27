@@ -31,10 +31,10 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 def validate_gender(gender):
-    return len(gender) == 1 and gender in ["m", "f"]
+    return len(gender) == 1 and gender in ["M", "F"]
 
 def validate_birth_year(birth_year):
-    return birth_year.isdigit() and len(birth_year) == 4
+    return birth_year.isdigit() and len(birth_year) == 4 and birth_year >= 1900
 
 def insert_users(input_file, facility=def_facility):
     """Insert users into a Facility from a csv file.
@@ -104,7 +104,7 @@ def insert_users(input_file, facility=def_facility):
             elif validate_gender(user["gender"]):
                 # check if gender is a single character and is f or m
                 raise ValueError(
-                    "Invalid gender. Please use 'm' for male or 'f' for female. {}".format(
+                    "Invalid gender. Please use 'M' for male or 'F' for female. {}".format(
                         user["username"],
                         colors.fg.red,
                     )
