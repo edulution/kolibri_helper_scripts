@@ -91,25 +91,25 @@ def insert_users(input_file, facility=def_facility):
                 )
                 sys.exit()
 
-            # elif validate_gender(user["gender"]):
-            #     # check if gender is a single character and is f or m
-            #     raise ValueError(
-            #         "Invalid gender. Please use 'M' for male or 'F' for female. {}".format(
-            #             user["username"],
-            #             colors.fg.red,
-            #         )
-            #     )
-            #     sys.exit()
+            elif validate_gender(user["gender"]):
+                # check if gender is a single character and is f or m
+                raise ValueError(
+                    "Invalid gender. Please use 'M' for male or 'F' for female. {}".format(
+                        user["username"],
+                        colors.fg.red,
+                    )
+                )
+                sys.exit()
 
-            # elif not validate_birth_year(user["birth_year"]):
-            #     # check if birth_year is a digit or lenght is not egual to 4
-            #     raise ValueError(
-            #         "Invalid birth year. Please use a 4-digit integer. {}".format(
-            #             user["username"],
-            #             colors.fg.red,
-            #         )
-            #     )
-            #     sys.exit()
+            elif not validate_birth_year(user["birth_year"]):
+                # check if birth_year is a digit or lenght is not egual to 4
+                raise ValueError(
+                    "Invalid birth year. Please use a 4-digit integer. {}".format(
+                        user["username"],
+                        colors.fg.red,
+                    )
+                )
+                sys.exit()
 
             elif username_exists:
                 # If a user with the same username already exists in the facility, modify the username
@@ -119,7 +119,7 @@ def insert_users(input_file, facility=def_facility):
 
                 while username_exists:
                     # Append a character from the first name to the username to make it unique
-                    new_username = "{}{}{}".format(original_username[0], first_name[count], original_username[1:]) # resolves older python version formatting error
+                    new_username = "{}{}{}".format(original_username[0], first_name[count], original_username[1:]) # trying to resolve older python version formatting error
                     # new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
                     username_exists = FacilityUser.objects.filter(username=new_username, facility_id=facility_id).exists()
 
@@ -145,8 +145,8 @@ def insert_users(input_file, facility=def_facility):
                     id=user["user_id"],
                     full_name=user["full_name"],
                     username=user["username"],
-                    # gender=user["gender"],
-                    # birth_year=user["birth_year"],
+                    gender=user["gender"],
+                    birth_year=user["birth_year"],
                     password=make_password(user["username"]),
                     dataset_id=dataset_id,
                     facility_id=facility_id,
