@@ -30,11 +30,14 @@ argParser.add_argument(
 # get the name of the default facility on the device
 def_facility = str(Facility.get_default_facility().name)
 
+
 def validate_gender(gender):
     return len(gender) == 1 and gender in ["M", "F"]
 
+
 def validate_birth_year(birth_year):
     return birth_year.isdigit() and len(birth_year) == 4 and int(birth_year) >= 1900
+
 
 def insert_users(input_file, facility=def_facility):
     """Insert users into a Facility from a csv file.
@@ -73,7 +76,7 @@ def insert_users(input_file, facility=def_facility):
         num_inserted = 0
 
         for user in users:
-
+            final_username = ""
             username_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
             ).exists()
@@ -119,14 +122,18 @@ def insert_users(input_file, facility=def_facility):
 
                 while username_exists:
                     # Append a character from the first name to the username to make it unique
-                    new_username = "{}{}{}".format(original_username[0], first_name[count], original_username[1:]) # trying to resolve older python version formatting error
+                    new_username = "{}{}{}".format(
+                        original_username[0], first_name[count], original_username[1:]
+                    )  # trying to resolve older python version formatting error
                     # new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
-                    username_exists = FacilityUser.objects.filter(username=new_username, facility_id=facility_id).exists()
+                    username_exists = FacilityUser.objects.filter(
+                        username=new_username, facility_id=facility_id
+                    ).exists()
 
                     count += 1
 
-                user["username"] = new_username
-                
+                final_username = new_username
+
                 print_colored(
                     "Duplicate username. The new username is {}".format(
                         new_username,
@@ -135,28 +142,30 @@ def insert_users(input_file, facility=def_facility):
                 )
 
             else:
+                final_username = user["username"]
                 # Generate the morango partition
-                _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
-                    dataset_id=dataset_id, user_id=user["user_id"]
-                )
 
-                # Create the user
-                FacilityUser.objects.create(
-                    id=user["user_id"],
-                    full_name=user["full_name"],
-                    username=user["username"],
-                    gender=user["gender"],
-                    birth_year=user["birth_year"],
-                    password=make_password(user["username"]),
-                    dataset_id=dataset_id,
-                    facility_id=facility_id,
-                    _morango_partition=_morango_partition,
-                    _morango_source_id=uuid.uuid4(),
-                )
-                print_colored(
-                    "Created user: {}".format(user["full_name"]),
-                    colors.fg.yellow,
-                )
+            _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
+                dataset_id=dataset_id, user_id=user["user_id"]
+            )
+
+            # Create the user
+            FacilityUser.objects.create(
+                id=user["user_id"],
+                full_name=user["full_name"],
+                username=final_username,
+                gender=user["gender"],
+                birth_year=user["birth_year"],
+                password=make_password(final_username),
+                dataset_id=dataset_id,
+                facility_id=facility_id,
+                _morango_partition=_morango_partition,
+                _morango_source_id=uuid.uuid4(),
+            )
+            print_colored(
+                "Created user: {}".format(user["full_name"]),
+                colors.fg.yellow,
+            )
             # Increment num_inserted by 1
             num_inserted += 1
 
