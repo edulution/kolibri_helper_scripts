@@ -91,15 +91,24 @@ def insert_users(input_file, facility=def_facility):
                 )
                 sys.exit()
             elif username_exists:
-                # if a user with the same username already exists in the facility
-                # raise a value error and terminate the script
-                raise ValueError(
-                    "Duplicate username. There is already a user called {}".format(
-                        user["username"],
+                original_username = user["username"]
+                first_name = user["full_name"].split()[0]
+                count = 1
+
+                while username_exists:
+                    new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
+                    username_exists = FacilityUser.objects.filter(username=new_username, facility_id=facility_id).exists()
+
+                    count += 1
+
+                user["username"] = new_username
+                
+                print(
+                    "Duplicate username. The new username is {}".format(
+                        new_username,
                         colors.fg.red,
                     )
                 )
-                sys.exit()
 
             elif validate_gender(user["gender"]):
                 # check if gender is a single character and is f or m
