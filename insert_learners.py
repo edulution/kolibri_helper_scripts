@@ -112,11 +112,13 @@ def insert_users(input_file, facility=def_facility):
                 sys.exit()
 
             elif username_exists:
+                # If a user with the same username already exists in the facility, modify the username
                 original_username = user["username"]
                 first_name = user["full_name"].split()[0]
                 count = 1
 
                 while username_exists:
+                    # Append a character from the first name to the username to make it unique
                     new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
                     username_exists = FacilityUser.objects.filter(username=new_username, facility_id=facility_id).exists()
 
@@ -124,10 +126,10 @@ def insert_users(input_file, facility=def_facility):
 
                 user["username"] = new_username
                 
-                print(
+                print_colored(
                     "Duplicate username. The new username is {}".format(
                         new_username,
-                        colors.fg.red,
+                        colors.fg.yellow,
                     )
                 )
 
