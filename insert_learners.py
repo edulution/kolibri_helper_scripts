@@ -94,7 +94,7 @@ def insert_users(input_file, facility=def_facility):
                 )
                 sys.exit()
 
-            elif validate_gender(user["gender"]):
+            elif not validate_gender(user["gender"]):
                 # check if gender is a single character and is f or m
                 raise ValueError(
                     "Invalid gender. Please use 'M' for male or 'F' for female. {}".format(
@@ -135,10 +135,10 @@ def insert_users(input_file, facility=def_facility):
                 final_username = new_username
 
                 print_colored(
-                    "Duplicate username. The new username is {}".format(
-                        new_username,
-                        colors.fg.yellow,
-                    )
+                    "Duplicate username: {} new username:{}".format(
+                        original_username, final_username
+                    ),
+                    colors.fg.yellow,
                 )
 
             else:
