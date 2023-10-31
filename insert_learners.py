@@ -119,7 +119,8 @@ def insert_users(input_file, facility=def_facility):
 
                 while username_exists:
                     # Append a character from the first name to the username to make it unique
-                    new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
+                    new_username = "{}{}{}".format(original_username[0], first_name[count], original_username[1:]) # resolves older python version formatting error
+                    # new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
                     username_exists = FacilityUser.objects.filter(username=new_username, facility_id=facility_id).exists()
 
                     count += 1
