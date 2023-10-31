@@ -34,7 +34,7 @@ def validate_gender(gender):
     return len(gender) == 1 and gender in ["M", "F"]
 
 def validate_birth_year(birth_year):
-    return birth_year.isdigit() and len(birth_year) == 4 and birth_year >= 1900
+    return birth_year.isdigit() and len(birth_year) == 4 and int(birth_year) >= 1900
 
 def insert_users(input_file, facility=def_facility):
     """Insert users into a Facility from a csv file.
@@ -101,7 +101,7 @@ def insert_users(input_file, facility=def_facility):
                 )
                 sys.exit()
 
-            elif validate_birth_year(user["gender"]):
+            elif not validate_birth_year(user["birth_year"]):
                 # check if birth_year is a digit or lenght is not egual to 4
                 raise ValueError(
                     "Invalid birth year. Please use a 4-digit integer. {}".format(
