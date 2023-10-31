@@ -163,7 +163,7 @@ def insert_users(input_file, facility=def_facility):
                 _morango_source_id=uuid.uuid4(),
             )
             print_colored(
-                "Created user: {}".format(user["full_name"]),
+                "Created user: {}".format(final_username),
                 colors.fg.yellow,
             )
             # Increment num_inserted by 1
