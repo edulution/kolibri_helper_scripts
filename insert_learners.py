@@ -134,6 +134,18 @@ def insert_users(input_file, facility=def_facility):
 
                 final_username = new_username
 
+                if count > len(first_name):
+                    final_count = 1
+                    final_username = "{}{}{}".format(
+                        original_username[0], first_name[1:final_count], original_username[1:]
+                    )  # resolves older python version formatting error
+                    # new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
+                    username_exists = FacilityUser.objects.filter(
+                        username=final_username, facility_id=facility_id
+                    ).exists()
+
+                    final_count += 1
+                    
                 print_colored(
                     "Duplicate username: {} new username:{}".format(
                         original_username, final_username
