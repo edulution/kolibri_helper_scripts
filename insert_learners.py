@@ -124,7 +124,7 @@ def insert_users(input_file, facility=def_facility):
                     # Append a character from the first name to the username to make it unique
                     new_username = "{}{}{}".format(
                         original_username[0], first_name[count], original_username[1:]
-                    )  # trying to resolve older python version formatting error
+                    )  # resolves older python version formatting error
                     # new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
                     username_exists = FacilityUser.objects.filter(
                         username=new_username, facility_id=facility_id
@@ -163,7 +163,7 @@ def insert_users(input_file, facility=def_facility):
                 _morango_source_id=uuid.uuid4(),
             )
             print_colored(
-                "Created user: {}".format(final_username),
+                "Created user: {}".format(user["full_name"]),
                 colors.fg.yellow,
             )
             # Increment num_inserted by 1
