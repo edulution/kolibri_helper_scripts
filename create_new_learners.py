@@ -15,6 +15,11 @@ from kolibri.core.auth.models import (
     FacilityDataset,
     FacilityUser,
 )  # noqa E402
+from insert_learners import (
+    validate_gender,
+    validate_birth_year,
+    generate_unique_username,
+)
 
 # Initalize argparse and define command line args that can be passed to this module
 argParser = argparse.ArgumentParser()
@@ -30,14 +35,6 @@ argParser.add_argument(
 # Get the name of the default facility on the device
 # used as the default value in case facility is not passed in
 def_facility = str(Facility.get_default_facility().name)
-
-
-def validate_gender(gender):
-    return len(gender) == 1 and gender in ["M", "F"]
-
-
-def validate_birth_year(birth_year):
-    return birth_year.isdigit() and len(birth_year) == 4 and birth_year >= 1900
 
 
 def create_users(input_file, facility=def_facility):
@@ -84,20 +81,8 @@ def create_users(input_file, facility=def_facility):
             user_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
             ).exists()
-            if user_exists:
-                # if a user with the same username already exists in the facility
-                # raise a value error and terminate the script
-                raise ValueError(
-                    print_colored(
-                        "Duplicate username. There is already a user called {}".format(
-                            user["username"]
-                        ),
-                        colors.fg.red,
-                    )
-                )
-                sys.exit()
 
-            elif not validate_gender(user["gender"]):
+            if not validate_gender(user["gender"]):
                 # check if gender is a single character and is f or m
                 raise ValueError(
                     "Invalid gender. Please use 'M' for male or 'F' for female. {}".format(
@@ -117,10 +102,25 @@ def create_users(input_file, facility=def_facility):
                 )
                 sys.exit()
 
+            if user_exists:
+                original_username = user["username"]
+                first_name = user["full_name"].split()[0]
+                final_username = generate_unique_username(
+                    original_username, first_name, facility_id
+                )
+                print_colored(
+                    "Duplicate username. There is already a user called {}. The new username is {}".format(
+                        original_username, final_username
+                    ),
+                    colors.fg.red,
+                )
+                sys.exit()
+
             else:
                 # Create the user
                 # Generate a new user_id
                 new_user_id = uuid.uuid4()
+                final_username = user["username"]
 
                 # Use the new user_id and the dataset_id to generate the morango partition
                 _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
@@ -131,10 +131,10 @@ def create_users(input_file, facility=def_facility):
                 FacilityUser.objects.create(
                     id=new_user_id,
                     full_name=user["full_name"],
-                    username=user["username"],
+                    username=final_username,
                     gender=user["gender"],
                     birth_year=user["birth_year"],
-                    password=make_password(user["username"]),
+                    password=make_password(final_username),
                     dataset_id=dataset_id,
                     facility_id=facility_id,
                     _morango_partition=_morango_partition,
