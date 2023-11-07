@@ -144,7 +144,7 @@ def insert_users(input_file, facility=def_facility):
                     original_username, first_name, facility_id
                 )
                 print_colored(
-                    "Duplicate username: {} new username:{}".format(
+                    "Duplicate username. There is already a user called {}. The new username is {}".format(
                         original_username, final_username
                     ),
                     colors.fg.yellow,
