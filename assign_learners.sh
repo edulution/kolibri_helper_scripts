@@ -2,7 +2,7 @@
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "NAME"
-  echo "  insert_channel_subscriptions - Insert numeracy channel groups"
+  echo "  assign_learners - Assign Learners to appropriate groups"
   echo
   echo "DESCRIPTION"
   echo "  Updates the subscriptions on each group and classroom, generate all content "
@@ -10,7 +10,7 @@ if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo 
   echo "Example"
   echo
-  echo "  ./insert_channel_subscriptions"
+  echo "  ./assign_learners.sh"
   exit 1
 fi
 
