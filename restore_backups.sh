@@ -2,25 +2,23 @@
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "NAME"
-  echo "	restore_backup - Restore Kolibri and Basline backup"
+  echo "	restore_backups - Restore Kolibri and Basline backup"
   echo
   echo "SYNOPSIS"
-  echo "	./restore_backup [path /to /Kolibri backup] [path /to /Basline backup] ... [NO DB's]"
+  echo "	./restore_backups.sh [path /to /Kolibri backup] [path /to /Basline backup]"
   echo
   echo "DESCRIPTION"
-  echo "	Drops and recreates both Kolibri and Basline databases."
-  echo "	The script terminates all active connections to both Kolibri and Basline dbs."
+  echo "	The script terminates all active connections to both Kolibri and Basline databases."
   echo "	This disconnects any leaners who might be logged in or submitting tests"
+  echo "	Drops and recreates both Kolibri and Basline databases."
+  echo "	Restores supplied Kolibri and Basline backups into the appropriate databases "
   echo ""
   echo "NOTE"
-  echo "	With no dbs, the script drops and recreates empty Kolibri and Basline databases"
   echo "	Always backup before runing the script"
   echo 
   echo "Examples"
   echo
-  echo "	./restore_backup "
-  echo "	./restore_backup xxx_kolibri_20220517.backup"
-  echo "	./restore_backup xxx_kolibri_20220517.backup xxx_baseline_20220517.backup"
+  echo "	./restore_backups.sh xxx_kolibri_20220517.backup xxx_baseline_20220517.backup"
   exit 1
 fi
 # function to drop and recreate the kolibri database then restore the supplied backup file
