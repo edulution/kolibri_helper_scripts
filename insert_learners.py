@@ -39,29 +39,6 @@ def validate_birth_year(birth_year):
     return birth_year.isdigit() and len(birth_year) == 4 and int(birth_year) >= 1900
 
 
-def generate_unique_username(original_username, facility_id, first_name):
-    new_username = original_username
-    count = 1
-
-    while FacilityUser.objects.filter(
-        username=new_username, facility_id=facility_id
-    ).exists():
-        new_username = "{}{}{}".format(
-            original_username[0], first_name[count], original_username[1:]
-        )
-        count += 1
-
-        if count > len(first_name):
-            # Append a character from the first name to the username to make it unique
-            final_count = 1
-            new_username = "{}{}{}".format(
-                original_username[0], first_name[1:final_count], original_username[1:]
-            )
-            count += 1
-
-    return new_username
-
-
 def insert_users(input_file, facility=def_facility):
     """Insert users into a Facility from a csv file.
     Fields expected in the csv file:
@@ -138,17 +115,44 @@ def insert_users(input_file, facility=def_facility):
                 sys.exit()
 
             elif username_exists:
+                # If a user with the same username already exists in the facility, modify the username
                 original_username = user["username"]
                 first_name = user["full_name"].split()[0]
-                final_username = generate_unique_username(
-                    original_username, first_name, facility_id
-                )
+                count = 1
+
+                while username_exists:
+                    # Append a character from the first name to the username to make it unique
+                    new_username = "{}{}{}".format(
+                        original_username[0], first_name[count], original_username[1:]
+                    )  # resolves older python version formatting error
+                    # new_username = f"{original_username[0]}{first_name[count]}{original_username[1:]}"
+                    username_exists = FacilityUser.objects.filter(
+                        username=new_username, facility_id=facility_id
+                    ).exists()
+                    count += 1
+
+                    if count > len(first_name):
+                        # use characters from the full name to generate a unique username
+                        final_count = 1
+                        new_username = "{}{}{}".format(
+                            original_username[0],
+                            first_name[1:final_count],
+                            original_username[1:],
+                        )
+                        username_exists = FacilityUser.objects.filter(
+                            username=new_username, facility_id=facility_id
+                        ).exists()
+                        final_count += 1
+
+                final_username = new_username
+
                 print_colored(
                     "Duplicate username. There is already a user called {}. The new username is {}".format(
                         original_username, final_username
                     ),
                     colors.fg.yellow,
                 )
+
             else:
                 final_username = user["username"]
                 # Generate the morango partition
