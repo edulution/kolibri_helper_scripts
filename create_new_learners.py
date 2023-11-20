@@ -92,7 +92,7 @@ def create_users(input_file, facility=def_facility):
                 )
                 sys.exit()
 
-            elif not validate_birth_year(user["gender"]):
+            elif not validate_birth_year(user["birth_year"]):
                 # check if birth_year is a digit or lenght is not egual to 4
                 raise ValueError(
                     "Invalid birth year. Please use a 4-digit integer. {}".format(
@@ -102,7 +102,7 @@ def create_users(input_file, facility=def_facility):
                 )
                 sys.exit()
 
-            if user_exists:
+            elif user_exists:
                 original_username = user["username"]
                 first_name = user["full_name"].split()[0]
                 final_username = generate_unique_username(
@@ -112,9 +112,8 @@ def create_users(input_file, facility=def_facility):
                     "Duplicate username. There is already a user called {}. The new username is {}".format(
                         original_username, final_username
                     ),
-                    colors.fg.red,
+                    colors.fg.yellow,
                 )
-                sys.exit()
 
             else:
                 # Create the user
