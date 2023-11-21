@@ -50,9 +50,6 @@ def create_users(input_file, facility=def_facility):
         None
     """
 
-    # Initialize variable for number of users created
-    num_created = 0
-
     # Check if the Facility supplied exists
     try:
         # Attempt to get a reference to the Facility supplied if it exists
@@ -76,9 +73,12 @@ def create_users(input_file, facility=def_facility):
         reader = csv.DictReader(f)
         users = [r for r in reader]
 
-        # Loop through the list of users read from the input file
+        # Initialize num_created to 0
+        num_created = 0
+
         for user in users:
-            user_exists = FacilityUser.objects.filter(
+            final_username = ""
+            username_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
             ).exists()
 
@@ -102,19 +102,19 @@ def create_users(input_file, facility=def_facility):
                 )
                 sys.exit()
 
-            elif user_exists:
+            elif username_exists:
+                # If a user with the same username already exists in the facility, modify the username
                 original_username = user["username"]
                 first_name = user["full_name"].split()[0]
                 final_username = generate_unique_username(
                     original_username, first_name, facility_id
                 )
                 print_colored(
-                    "Duplicate username. There is already a user called {}. The new username is {}".format(
+                    "Duplicate username. User '{}' already exists. The new username is '{}'".format(
                         original_username, final_username
                     ),
                     colors.fg.yellow,
                 )
-
             else:
                 # Create the user
                 # Generate a new user_id
