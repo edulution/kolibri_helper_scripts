@@ -1,5 +1,22 @@
 #!/bin/bash
 
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "NAME"
+  echo "  import_channels_network - Import numeracy channels from"
+  echo "  the internet"
+  echo
+  echo "SYNOPSIS"
+  echo "  ./import_channels_network.sh "
+  echo
+  echo "DESCRIPTION"
+  echo "  The script imports all numeracy channels to a device using internet connection" 
+  echo
+  echo "Examples"
+  echo " ./import_channels_network.sh"
+  echo "	Imports all numeracy channels"
+  exit 1
+fi
+
 # channel_ids
 #==============
 # Level 1 Section 1 - f3f6bf4b9c424b6fbd90bece1418a415

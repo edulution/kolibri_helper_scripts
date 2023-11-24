@@ -1,5 +1,25 @@
 #!/bin/bash
 
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "NAME"
+  echo "  import_channels - Import numeracy channels"
+  echo
+  echo "SYNOPSIS"
+  echo "  ./import_channels.sh"
+  echo
+  echo "DESCRIPTION"
+  echo "  The script imports all numeracy channels from the local content pack stored"
+  echo "  on a device in the /opt directory" 
+  echo
+  echo "Examples"
+  echo " ./import_channels.sh"
+  echo "	Imports all numeracy channels"
+  echo
+  echo "  ./import_channels.sh ~/KOLIBRI_DATA"
+  echo "	Imports numeracy channels from the KOLIBRI_DATA directory"
+  exit 1
+fi
+
 # channel_ids
 #==============
 # Level 1 Section 1 - f3f6bf4b9c424b6fbd90bece1418a415

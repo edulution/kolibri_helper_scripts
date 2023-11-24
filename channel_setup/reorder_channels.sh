@@ -1,5 +1,18 @@
 #!/bin/bash
 
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "NAME"
+  echo " reorder_channels - Reorder numeracy channels"
+  echo
+  echo "DESCRIPTION"
+  echo "  Reorders numeracy channels by level to have Level 1 - Section 1 appearing "
+  echo "  first and Coach Professional Development last" 
+  echo
+  echo "Example"
+  echo " ./reorder_channels.sh "
+  exit 1
+fi
 # export the python path
 
 # Order the channels to have Level 1 - Section 1 appearing first and Coach Professional Development last
