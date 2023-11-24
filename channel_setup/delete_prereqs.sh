@@ -3,10 +3,10 @@
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "NAME"
-  echo "  delete_prereqs - Delete channel prerequisites"
+  echo "  delete_prereqs - Delete content prerequisites"
   echo
   echo "DESCRIPTION"
-  echo "  Deletes all numeracy channel prerequisites"
+  echo "  Deletes all numeracy content prerequisites"
   echo 
   echo "Example"
   echo " ./delete_prereqs.sh"
