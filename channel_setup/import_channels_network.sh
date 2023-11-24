@@ -2,21 +2,18 @@
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "NAME"
-  echo "  import_channels_network - Import numeracy channels"
+  echo "  import_channels_network - Import numeracy channels from"
+  echo "  the internet"
   echo
   echo "SYNOPSIS"
-  echo "  ./import_channels_network [CHANNEL_ID]"
+  echo "  ./import_channels_network.sh "
   echo
   echo "DESCRIPTION"
-  echo "  With no CHANNEL_ID supplied, the script imports all numeracy channels to a device"
-  echo "  using internet connection" 
+  echo "  The script imports all numeracy channels to a device using internet connection" 
   echo
   echo "Examples"
-  echo " ./import_channels_network"
+  echo " ./import_channels_network.sh"
   echo "	Imports all numeracy channels"
-  echo
-  echo "  ./import_channels_network f3f6bf4b9c424b6fbd90bece1418a415"
-  echo "	Imports only Level 1 Section 1 of the numeracy channels"
   exit 1
 fi
 
