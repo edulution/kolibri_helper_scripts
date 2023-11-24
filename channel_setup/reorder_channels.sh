@@ -3,7 +3,7 @@
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "NAME"
-  echo " reorder_channels -   channel module table"
+  echo " reorder_channels - Reorder numeracy channels"
   echo
   echo "DESCRIPTION"
   echo "  Reorders numeracy channels by level to have Level 1 - Section 1 appearing "
