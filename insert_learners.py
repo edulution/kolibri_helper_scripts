@@ -31,6 +31,31 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 
+def validate_gender(gender):
+    return len(gender) == 1 and gender in ["M", "F"]
+
+
+def validate_birth_year(birth_year):
+    return birth_year.isdigit() and len(birth_year) == 4 and int(birth_year) >= 1900
+
+
+def generate_unique_username(original_username, first_name, facility_id):
+    count = 1
+    while FacilityUser.objects.filter(
+        username=original_username, facility_id=facility_id
+    ).exists():
+        new_username = "{}{}{}".format(
+            original_username[0], first_name[count], original_username[1:]
+        )
+        count += 1
+        if count > len(first_name):
+            new_username = "{}{}{}".format(
+                original_username[0], first_name[1:count], original_username[1:]
+            )
+        original_username = new_username
+    return new_username
+
+
 def insert_users(input_file, facility=def_facility):
     """Insert users into a Facility from a csv file.
     Fields expected in the csv file:
@@ -68,7 +93,7 @@ def insert_users(input_file, facility=def_facility):
         num_inserted = 0
 
         for user in users:
-
+            final_username = ""
             username_exists = FacilityUser.objects.filter(
                 username=user["username"], facility_id=facility_id
             ).exists()
@@ -85,37 +110,65 @@ def insert_users(input_file, facility=def_facility):
                     )
                 )
                 sys.exit()
-            elif username_exists:
-                # if a user with the same username already exists in the facility
-                # raise a value error and terminate the script
+
+            elif not validate_gender(user["gender"]):
+                # check if gender is a single character and is f or m
                 raise ValueError(
-                    "Duplicate username. There is already a user called {}".format(
+                    "Invalid gender. Please use 'M' for male or 'F' for female. {}".format(
                         user["username"],
                         colors.fg.red,
                     )
                 )
                 sys.exit()
-            else:
-                # Generate the morango partition
-                _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
-                    dataset_id=dataset_id, user_id=user["user_id"]
-                )
 
-                # Create the user
-                FacilityUser.objects.create(
-                    id=user["user_id"],
-                    full_name=user["full_name"],
-                    username=user["username"],
-                    password=make_password(user["username"]),
-                    dataset_id=dataset_id,
-                    facility_id=facility_id,
-                    _morango_partition=_morango_partition,
-                    _morango_source_id=uuid.uuid4(),
+            elif not validate_birth_year(user["birth_year"]):
+                # check if birth_year is a digit or lenght is not egual to 4
+                raise ValueError(
+                    "Invalid birth year. Please use a 4-digit integer. {}".format(
+                        user["username"],
+                        colors.fg.red,
+                    )
+                )
+                sys.exit()
+
+            elif username_exists:
+                # If a user with the same username already exists in the facility, modify the username
+                original_username = user["username"]
+                first_name = user["full_name"].split()[0]
+                final_username = generate_unique_username(
+                    original_username, first_name, facility_id
                 )
                 print_colored(
-                    "Created user: {}".format(user["full_name"]),
+                    "Duplicate username. User '{}' already exists. The new username is '{}'".format(
+                        original_username, final_username
+                    ),
                     colors.fg.yellow,
                 )
+            else:
+                final_username = user["username"]
+                # Generate the morango partition
+
+            _morango_partition = "{dataset_id}:user-ro:{user_id}".format(
+                dataset_id=dataset_id, user_id=user["user_id"]
+            )
+
+            # Create the user
+            FacilityUser.objects.create(
+                id=user["user_id"],
+                full_name=user["full_name"],
+                username=final_username,
+                gender=user["gender"],
+                birth_year=user["birth_year"],
+                password=make_password(final_username),
+                dataset_id=dataset_id,
+                facility_id=facility_id,
+                _morango_partition=_morango_partition,
+                _morango_source_id=uuid.uuid4(),
+            )
+            print_colored(
+                "Created user: {}".format(user["full_name"]),
+                colors.fg.yellow,
+            )
             # Increment num_inserted by 1
             num_inserted += 1
 
