@@ -66,7 +66,6 @@ import_channels_local(){
 		"1ab4e3287ce745ee9166bb13021a3b55"
 		"4c5f286c4d4c473abff55402a6cf0f9e"
 		"8d368058656544e2b7fe62eb2a632698"
-		"19ea4c94ee484cb0b5bb617f5511f4c1"
 		)
 
 	# Inform the user that the importing has begun
