@@ -7,6 +7,7 @@ import psycopg2
 django.setup()
 from kolibri.core.auth.models import FacilityUser
 from django.core.exceptions import ObjectDoesNotExist
+from colors import *
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Update learner details in the database.')
@@ -37,7 +38,7 @@ def update_learner_details(input_file):
                     success = "User with ID {}: Full name has been changed to {}. Username has been changed to {}".format(
                         user_object.id, user_object.full_name, user_object.username
                     )
-                    print(success)
+                    print_colored(success, fg.green)
 
                     # Connect to baseline_testing database and update username in responses table
                     conn = psycopg2.connect(
@@ -53,16 +54,16 @@ def update_learner_details(input_file):
                     cursor.close()
                     conn.close()
 
-                    print("Username updated in baseline_testing database")
+                    print_colored("Username updated in baseline_testing database", fg.green)
 
                 except ObjectDoesNotExist:
                     error = "Error: User with ID {} does not exist".format(user['user_id'])
-                    print(error)
+                    print_colored(error, fg.red)
 
                     continue
     except OSError as e:
         error = "Error: {}".format(e)
-        print(error)
+        print_colored(error, fg.red)
 
 if __name__ == '__main__':
     args = parse_arguments()
