@@ -8,7 +8,6 @@ import kolibri
 
 django.setup()
 
-
 from colors import print_colored, colors
 from django.core.exceptions import ObjectDoesNotExist
 from kolibri.core.auth.models import FacilityUser
@@ -108,6 +107,7 @@ def update_learner_details(input_file):
                         )
 
                     # Establish connection to the database
+                    conn = None
                     if user_object.username != new_username:
                         user_object.username = new_username
                         user_object.save()
@@ -119,9 +119,6 @@ def update_learner_details(input_file):
                         )
 
                         # Establish connection to the database
-
-                        # Update username in the baseline_testing database
-                        cursor = conn.cursor()
                         try:
                             conn = psycopg2.connect(
                                 dbname=os.environ.get("BASELINE_DATABASE_NAME"),
@@ -130,14 +127,15 @@ def update_learner_details(input_file):
                                 host=os.environ.get("BASELINE_DATABASE_HOST"),
                             )
 
-                            # Update username in the database for the user with the given user_id
+                            # Update username in the baseline_testing database
+                            cursor = conn.cursor()
                             sql_query = (
                                 "UPDATE responses SET username = %s WHERE user_id = %s"
                             )
                             cursor.execute(sql_query, (new_username, user_id))
                             conn.commit()
 
-                            # Print success message and close the cursor and connection to the database
+                            # Print success message
                             print_colored(
                                 "User with ID {}: Username updated in baseline_testing database".format(
                                     user_id
@@ -152,7 +150,8 @@ def update_learner_details(input_file):
                                 colors.fg.red,
                             )
                         finally:
-                            cursor.close()
+                            if cursor is not None:
+                                cursor.close()
                             if conn is not None:
                                 conn.close()
 
