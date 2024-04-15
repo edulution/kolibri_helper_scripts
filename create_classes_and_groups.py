@@ -28,6 +28,13 @@ argParser.add_argument(
     "-c",
     help="Name of Facility( centre_id) in the case of multiple facilities on 1 device",
 )
+argParser.add_argument(
+    "--delete",
+    "-d",
+    action="store_true",
+    default=False,
+    help="Delete existing existing facility classes. The default value is False",
+)
 
 
 # Get the name of the default facility on the device
@@ -35,11 +42,18 @@ argParser.add_argument(
 def_facility = str(Facility.get_default_facility().name)
 
 # List of the LearnerGroups we want to create in each class
-wanted_learnergroups = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
+wanted_learnergroups = [
+    "Level 1",
+    "Level 2",
+    "Level 3",
+    "Level 4",
+    "Level 5",
+    "Level 6",
+]
 
 
 def create_classes_and_groups(
-    input_file, facilityname=def_facility, delete_existing_classrooms=True
+    input_file, facilityname=def_facility, delete_existing_classrooms=False
 ):
     """Function to created classrooms and groups inside each classroom based on a csv file
     The file is expected to have columns centre and grade. All other columns are ignored
@@ -84,7 +98,6 @@ def create_classes_and_groups(
 
         # Loop through the list of centres and classrooms read from the csv above
         for row in centres_and_classrooms:
-
             facility_exists = facility_obj.name == row["centre"]
 
             # If the facility exists, create the classroom specified in the grade column
@@ -110,14 +123,16 @@ if __name__ == "__main__":
     # Create the classrooms and learnergroups in the default facility
     if args.file and not (args.centre):
         open_file = args.file
-        create_classes_and_groups(open_file)
+        create_classes_and_groups(open_file, delete_existing_classrooms=args.delete)
 
     # If both the file and the facility are supplied
     # Create the classrooms and learnergroups based on the facility supplied
     elif args.file and args.centre:
         facility = args.centre
         open_file = args.file
-        create_classes_and_groups(open_file, facility)
+        create_classes_and_groups(
+            open_file, facility, delete_existing_classrooms=args.delete
+        )
 
     # If neither the file nor the facility are passed in, stop the script in an error state
     else:
