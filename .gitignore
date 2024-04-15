@@ -4,3 +4,4 @@ sandbox.py
 __pycache__
 *.sublime-project
 *.sublime-workspace
+.Rproj.user
