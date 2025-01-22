@@ -131,7 +131,7 @@ def create_revision_quizzes(
                     title=quiz_title,
                     question_count=n_content_items,
                     question_sources=quiz_content,
-                    active=True,
+                    active=False,
                     collection=class_for_quizzes,
                     creator=admin_for_quizzes,
                     data_model_version=1,
